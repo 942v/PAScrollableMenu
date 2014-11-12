@@ -210,7 +210,7 @@
         [self.contentView removeConstraints:cellConstraints];
 
         NSDictionary *viewDict2 = @{@"cell":cell, @"contentView": self.contentView};
-        NSDictionary *metrics = @{@"leftMargin":@(col*self.cellWidth), @"height":@(cellHeight), @"width": @(self.cellWidth)};
+        NSDictionary *metrics = @{@"leftMargin":@(col*self.cellWidth), @"height":@(cellHeight), @"width": @(self.cellWidth-self.marginWidth)};
         
         NSMutableArray *cellContraintsSave = [NSMutableArray array];
         
