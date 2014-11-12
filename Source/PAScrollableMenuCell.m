@@ -59,6 +59,7 @@
     [self.textLabel setFont:[UIFont fontWithName:@"Helvetica-New" size:14]];
     [self.textLabel setText:@"Default"];
     [self.textLabel sizeToFit];
+    [self.textLabel setMinimumScaleFactor:.5f];
     [self addSubview:self.textLabel];
     
     [self setFrame:CGRectMake(0, 0, self.textLabel.frame.size.width, 0)];
@@ -66,7 +67,7 @@
     NSDictionary *viewDict =@{@"label":self.textLabel};
     NSDictionary *metrics = @{@"margin":@0};
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=margin)-[label]-(>=margin)-|" options:NSLayoutFormatAlignAllCenterX metrics:metrics views:viewDict]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[label]|" options:NSLayoutFormatAlignAllCenterX metrics:metrics views:viewDict]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=margin)-[label]-(>=margin)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:viewDict]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.f constant:0.f]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.f constant:0.f]];

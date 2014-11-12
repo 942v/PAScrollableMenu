@@ -70,7 +70,7 @@
     self.visibleCellsConstraints = [NSMutableDictionary dictionary];
     self.recyclePool = [NSMutableSet set];
     self.marginWidth = 1.0f;
-    self.cellWidth = 40;
+    self.cellWidth = 100;
     
 }
 
@@ -177,7 +177,7 @@
     
     CGFloat cellHeight = self.bounds.size.height;
     
-    for (int col = firstColumn; col<lastColumn; ++col){
+    for (NSUInteger col = firstColumn; col<lastColumn; ++col){
         
         //if (itemIndex >= self.itemsCount) return;
         
@@ -194,25 +194,24 @@
         
         NSArray *cellConstraints = [self.visibleCellsConstraints objectForKey:path];
         [self.contentView removeConstraints:cellConstraints];
-        
-        cell.frame = CGRectInset( CGRectMake(col*self.cellWidth, 0, self.cellWidth, cellHeight) , self.marginWidth, 0);
 
-        NSDictionary *viewDict2 = @{@"cell":cell};
-        NSDictionary *metrics = @{@"leftMargin":@(col*self.cellWidth)};
+        NSDictionary *viewDict2 = @{@"cell":cell, @"contentView": self.contentView};
+        NSDictionary *metrics = @{@"leftMargin":@(col*self.cellWidth), @"height":@(cellHeight), @"width": @(self.cellWidth)};
         
         NSMutableArray *cellContraintsSave = [NSMutableArray array];
-        [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(leftMargin)-[cell(==cell)]" options:0 metrics:metrics views:viewDict2]];
-        [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[cell(==cell)]-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:viewDict2]];
+        
+        [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-leftMargin-[cell(width)]" options:0 metrics:metrics views:viewDict2]];
+        [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cell(height)]|" options:0 metrics:metrics views:viewDict2]];
         [self.contentView addConstraints:cellContraintsSave];
         
         [self.visibleCellsConstraints setObject:cellContraintsSave forKey:path];
-        
+
         if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:willDisplayCell:forIndexPath:)]){
             [self.scrollableMenuDelegate PAScrollableMenu:self willDisplayCell:cell forIndexPath:path];
         }
     }
     
-    NSLog(@"ancho ; %i", self.contentView.subviews.count);
+    NSLog(@"ancho ; %lu", (unsigned long)self.contentView.subviews.count);
     
     [super layoutSubviews];
 }
