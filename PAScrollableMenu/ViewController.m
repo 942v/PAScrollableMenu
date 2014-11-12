@@ -38,7 +38,7 @@
     
     self.items = [NSMutableArray array];
     
-    for (int i = 0; i<1000; i++) {
+    for (int i = 0; i<40; i++) {
         [self.items addObject:[NSString stringWithFormat:@"Pestanha %i", i]];
     }
     

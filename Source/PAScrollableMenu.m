@@ -70,7 +70,7 @@
     self.visibleCellsConstraints = [NSMutableDictionary dictionary];
     self.recyclePool = [NSMutableSet set];
     self.marginWidth = 1.0f;
-    self.cellWidth = 40;
+    self.cellWidth = 100;
     
 }
 
@@ -174,6 +174,20 @@
     
     NSUInteger lastColumn = floorf( (CGRectGetMaxX(self.bounds)-1) / self.cellWidth ) + 1;
     lastColumn = MIN(lastColumn, self.itemsCount);
+    
+    //voilà
+    //fix para soportar separacion entre celdas
+    
+//    int separacion = 20; //debe ser entero
+//    NSUInteger firstColumn = floorf((CGRectGetMinX(self.bounds)-floorf(CGRectGetMinX(self.bounds)/(self.cellWidth+separacion))*separacion)/self.cellWidth);
+//    firstColumn = MAX(firstColumn, 0);
+//    
+//    NSUInteger lastColumn = floorf((CGRectGetMaxX(self.bounds)-(floorf(CGRectGetMaxX(self.bounds)/(self.cellWidth+separacion))+1)*separacion)/self.cellWidth)-1;
+//    firstColumn = MIN(lastColumn, self.itemsCount);
+    
+    
+    
+    
     
     CGFloat cellHeight = self.bounds.size.height;
     
