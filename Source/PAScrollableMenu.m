@@ -8,90 +8,213 @@
 
 #import "PAScrollableMenu.h"
 
+#define IfDebug Debug==1
+#define ReallyDebug if(IfDebug)NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+
+#define Debug 0
+
 @interface PAScrollableMenu ()
 
-@property (nonatomic, strong) UIScrollView      *   scrollView;
-@property (nonatomic, strong) NSMutableArray    *   items;
+@property(nonatomic, strong) UIView *contentView;
+
+@property(nonatomic, assign) NSUInteger itemsCount;
+@property(nonatomic, strong) NSMutableSet* visibleCells;
+@property(nonatomic, strong) NSMutableDictionary* visibleCellsMapping;
+@property(nonatomic, strong) NSMutableDictionary* visibleCellsConstraints;
+@property(nonatomic, strong) NSMutableSet* recyclePool;
 
 @end
 
 @implementation PAScrollableMenu
 
-- (instancetype)init{
-    self = [super init];
-    if (self) {
-        [self setup];
-    }
-    return self;
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self setup];
-    }
-    return self;
-}
+#pragma mark - Init/Dealloc
 
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
+    
     if (self) {
-        [self setup];
+        [self configure];
     }
+    
     return self;
 }
 
-- (void)setup{
-    // Variables initialiatio
+- (id) initWithCoder:(NSCoder*)aDecoder{
+    self = [super initWithCoder:aDecoder];
     
-    self.items = [NSMutableArray new];
+    if (self){
+        [self configure];
+    }
     
-    [self initScrollView];
+    return self;
 }
 
-- (void)initScrollView{
-    self.scrollView = [[UIScrollView alloc] init];
-    [self.scrollView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.scrollView setShowsHorizontalScrollIndicator:NO];
-    [self.scrollView setShowsVerticalScrollIndicator:NO];
-    [self.scrollView setBackgroundColor:[UIColor clearColor]];
-    [self.scrollView setBounces:NO];
+- (void)configure{
+    ReallyDebug
     
-    [self addSubview:self.scrollView];
+    [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self setShowsHorizontalScrollIndicator:NO];
+    [self setShowsVerticalScrollIndicator:NO];
+    //[self setBackgroundColor:[UIColor clearColor]];
+    [self setBounces:YES];
+    [self setClipsToBounds:YES];
+    
+    self.contentView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.contentView setClipsToBounds:YES];
+    //[self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentView setBackgroundColor:[UIColor blueColor]];
+    [self addSubview:self.contentView];
+    
+    self.visibleCells = [NSMutableSet set];
+    self.visibleCellsMapping = [NSMutableDictionary dictionary];
+    self.visibleCellsConstraints = [NSMutableDictionary dictionary];
+    self.recyclePool = [NSMutableSet set];
+    self.marginWidth = 1.0f;
+    self.cellWidth = 40;
+    
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow{
+    if (newWindow) [self reloadData];
+}
+
+#pragma mark - Loading & Tiling cells
+
+- (void)reloadData{
+    ReallyDebug
+    
+    [self setItemsCount:[self.scrollableMenuDataSource numberOfItemsInPAScrollableMenu:self]];
+    
+    [self.contentView removeConstraints:self.contentView.constraints];
+    
+    self.contentSize = CGSizeMake(self.cellWidth*self.itemsCount, self.bounds.size.height);
+    [self.contentView setFrame:(CGRect){
+        .size = self.contentSize,
+        .origin = CGPointZero
+    }];
+    
+
+    for(PAScrollableMenuCell* cell in self.visibleCells){
+        [self.recyclePool addObject:cell];
+        [cell removeFromSuperview];
+    }
+    [self.visibleCells removeAllObjects];
+    [self.visibleCellsMapping removeAllObjects];
+
+    [self setNeedsLayout];
+    
+}
+
+- (void)setMarginWidth:(CGFloat)val{
+    ReallyDebug
+    
+    _marginWidth = val;
+    [self setNeedsLayout]; // no need to reload all data, only relayout.
+}
+
+- (void)setCellWidth:(CGFloat)cellWidth{
+    ReallyDebug
+    
+    _cellWidth = cellWidth;
+    [self setNeedsDisplay];
+}
+
+- (void)deselectSelectedCellsAnimated:(BOOL)animated{
+    ReallyDebug
+    [self setIndexPathForSelectedCell:nil animated:animated];
+}
+
+- (void)setIndexPathForSelectedCell:(NSIndexPath *)indexPath{
+    ReallyDebug
+    [self setIndexPathForSelectedCell:indexPath animated:NO];
+}
+
+- (void)setIndexPathForSelectedCell:(NSIndexPath *)indexPath animated:(BOOL)animated{
+    ReallyDebug
+    if (indexPath != _indexPathForSelectedCell){
+        [[self.visibleCellsMapping objectForKey:_indexPathForSelectedCell] setSelected:NO animated:animated];
+        
+        _indexPathForSelectedCell = indexPath;
+        
+        [[self.visibleCellsMapping objectForKey:_indexPathForSelectedCell] setSelected:YES animated:animated];
+    }
+}
+
+
+
+- (PAScrollableMenuCell*)dequeueReusableCell{
+    ReallyDebug
+    PAScrollableMenuCell* cell = [self.recyclePool anyObject];
+    if (cell){
+        [self.recyclePool removeObject:cell];
+        
+        cell.selected = NO;
+    }
+    return cell;
 }
 
 - (void)layoutSubviews{
-    [super layoutSubviews];
-    
-    NSDictionary *view = @{@"sView": self.scrollView};
-    NSDictionary *metrics = @{@"margin": @0};
-    
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-margin-[sView]-margin-|" options:NSLayoutFormatAlignAllCenterX metrics:metrics views:view]];
-    
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[sView]-margin-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:view]];
-}
-
-- (void)addMenuItemWithTitle:(NSString *)title{
-    PAScrollableMenuItem *item = [PAScrollableMenuItem newWithTitle:title];
-    
-    BOOL hasCount = self.items.count>0;
-    [item setIndexArray:self.items.count];
-    
-    [self.items addObject:item];
-    [self addSubview:item];
-    
-    NSMutableDictionary *itemViewDict = [NSMutableDictionary dictionaryWithObject:item forKey:@"item"];
-    NSDictionary *metrics = @{@"width":@(item.titleLabel.bounds.size.width)};
-    
-    [item addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[item(width)]" options:0 metrics:metrics views:itemViewDict]];
-    
-    NSString *clipVisualObjectString = @"|";
-    if (hasCount) {
-        [itemViewDict setObject:[self.items objectAtIndex:item.indexArray-1] forKey:@"item0"];
-        clipVisualObjectString = @"[item0]";
+    ReallyDebug
+    // Remove cells that are no longer visible an cached them
+    for(PAScrollableMenuCell* cell in self.visibleCells){
+        if (!CGRectIntersectsRect(cell.frame, self.bounds)){
+            [self.recyclePool addObject:cell];
+            [self.visibleCellsMapping removeObjectForKey:cell.indexPath];
+            [self.visibleCellsConstraints removeObjectForKey:cell.indexPath];
+            [cell removeFromSuperview];
+        }
     }
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:%@-4-[item]", clipVisualObjectString] options:0 metrics:nil views:itemViewDict]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[item]|" options:0 metrics:nil views:itemViewDict]];
+    [self.visibleCells minusSet:self.recyclePool];
+    
+    if (self.itemsCount == 0) return;
+    
+    // !!!: ESTA ES LA WAA Q JODE
+    NSUInteger firstColumn = floorf( CGRectGetMinX(self.bounds) / self.cellWidth );
+    firstColumn = MAX(firstColumn, 0);
+    
+    NSUInteger lastColumn = floorf( (CGRectGetMaxX(self.bounds)-1) / self.cellWidth ) + 1;
+    lastColumn = MIN(lastColumn, self.itemsCount);
+    
+    CGFloat cellHeight = self.bounds.size.height;
+    
+    for (int col = firstColumn; col<lastColumn; ++col){
+        
+        //if (itemIndex >= self.itemsCount) return;
+        
+        NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:col];
+        PAScrollableMenuCell* cell = [self.visibleCellsMapping objectForKey:path];
+        if (!cell){
+            cell = [self.scrollableMenuDataSource PAScrollableMenu:self cellAtIndexPath:path];
+            cell.indexPath = path;
+            cell.selected = (path == self.indexPathForSelectedCell);
+            [self.contentView insertSubview:cell atIndex:self.visibleCells.count];
+            [self.visibleCells addObject:cell];
+            [self.visibleCellsMapping setObject:cell forKey:path];
+        }
+        
+        NSArray *cellConstraints = [self.visibleCellsConstraints objectForKey:path];
+        [self.contentView removeConstraints:cellConstraints];
+        
+        cell.frame = CGRectInset( CGRectMake(col*self.cellWidth, 0, self.cellWidth, cellHeight) , self.marginWidth, 0);
+
+        NSDictionary *viewDict2 = @{@"cell":cell};
+        NSDictionary *metrics = @{@"leftMargin":@(col*self.cellWidth)};
+        
+        NSMutableArray *cellContraintsSave = [NSMutableArray array];
+        [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(leftMargin)-[cell(==cell)]" options:0 metrics:metrics views:viewDict2]];
+        [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[cell(==cell)]-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:viewDict2]];
+        [self.contentView addConstraints:cellContraintsSave];
+        
+        [self.visibleCellsConstraints setObject:cellContraintsSave forKey:path];
+        
+        if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:willDisplayCell:forIndexPath:)]){
+            [self.scrollableMenuDelegate PAScrollableMenu:self willDisplayCell:cell forIndexPath:path];
+        }
+    }
+    
+    NSLog(@"ancho ; %i", self.contentView.subviews.count);
+    
+    [super layoutSubviews];
 }
 
 @end

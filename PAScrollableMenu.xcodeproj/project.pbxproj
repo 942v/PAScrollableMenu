@@ -15,7 +15,7 @@
 		116CDAB61A047EBA006F738C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 116CDAB41A047EBA006F738C /* LaunchScreen.xib */; };
 		116CDAC21A047EBA006F738C /* PAScrollableMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 116CDAC11A047EBA006F738C /* PAScrollableMenuTests.m */; };
 		116CDACE1A048113006F738C /* PAScrollableMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 116CDACD1A048113006F738C /* PAScrollableMenu.m */; };
-		116CDAD11A0489E6006F738C /* PAScrollableMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 116CDAD01A0489E6006F738C /* PAScrollableMenuItem.m */; };
+		11BA0E401A132FFF00FEA38B /* PAScrollableMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,8 +44,8 @@
 		116CDAC11A047EBA006F738C /* PAScrollableMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PAScrollableMenuTests.m; sourceTree = "<group>"; };
 		116CDACC1A048113006F738C /* PAScrollableMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollableMenu.h; sourceTree = "<group>"; };
 		116CDACD1A048113006F738C /* PAScrollableMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollableMenu.m; sourceTree = "<group>"; };
-		116CDACF1A0489E6006F738C /* PAScrollableMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollableMenuItem.h; sourceTree = "<group>"; };
-		116CDAD01A0489E6006F738C /* PAScrollableMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollableMenuItem.m; sourceTree = "<group>"; };
+		11BA0E3E1A132FFF00FEA38B /* PAScrollableMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollableMenuCell.h; sourceTree = "<group>"; };
+		11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollableMenuCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,8 +131,8 @@
 			children = (
 				116CDACC1A048113006F738C /* PAScrollableMenu.h */,
 				116CDACD1A048113006F738C /* PAScrollableMenu.m */,
-				116CDACF1A0489E6006F738C /* PAScrollableMenuItem.h */,
-				116CDAD01A0489E6006F738C /* PAScrollableMenuItem.m */,
+				11BA0E3E1A132FFF00FEA38B /* PAScrollableMenuCell.h */,
+				11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -241,8 +241,8 @@
 				116CDAAE1A047EBA006F738C /* ViewController.m in Sources */,
 				116CDAAB1A047EBA006F738C /* AppDelegate.m in Sources */,
 				116CDACE1A048113006F738C /* PAScrollableMenu.m in Sources */,
+				11BA0E401A132FFF00FEA38B /* PAScrollableMenuCell.m in Sources */,
 				116CDAA81A047EBA006F738C /* main.m in Sources */,
-				116CDAD11A0489E6006F738C /* PAScrollableMenuItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
