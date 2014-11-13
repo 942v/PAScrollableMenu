@@ -69,7 +69,7 @@
     self.visibleCellsMapping = [NSMutableDictionary dictionary];
     self.visibleCellsConstraints = [NSMutableDictionary dictionary];
     self.recyclePool = [NSMutableSet set];
-    self.marginWidth = 1.0f;
+    self.marginWidth = 10.f;
     self.cellWidth = 100;
     
 }
@@ -87,12 +87,11 @@
     
     [self.contentView removeConstraints:self.contentView.constraints];
     
-    self.contentSize = CGSizeMake(self.cellWidth*self.itemsCount, self.bounds.size.height);
+    self.contentSize = CGSizeMake((self.cellWidth*self.itemsCount)+((self.itemsCount-1)*self.marginWidth), self.bounds.size.height);
     [self.contentView setFrame:(CGRect){
         .size = self.contentSize,
         .origin = CGPointZero
     }];
-    
 
     for(PAScrollableMenuCell* cell in self.visibleCells){
         [self.recyclePool addObject:cell];
@@ -169,25 +168,22 @@
     if (self.itemsCount == 0) return;
     
     // !!!: ESTA ES LA WAA Q JODE
-    NSUInteger firstColumn = floorf( CGRectGetMinX(self.bounds) / self.cellWidth );
+    /*NSUInteger firstColumn = floorf( CGRectGetMinX(self.bounds) / self.cellWidth );
     firstColumn = MAX(firstColumn, 0);
     
     NSUInteger lastColumn = floorf( (CGRectGetMaxX(self.bounds)-1) / self.cellWidth ) + 1;
-    lastColumn = MIN(lastColumn, self.itemsCount);
+    lastColumn = MIN(lastColumn, self.itemsCount);*/
     
     //voilà
     //fix para soportar separacion entre celdas
     
-//    int separacion = 20; //debe ser entero
-//    NSUInteger firstColumn = floorf((CGRectGetMinX(self.bounds)-floorf(CGRectGetMinX(self.bounds)/(self.cellWidth+separacion))*separacion)/self.cellWidth);
-//    firstColumn = MAX(firstColumn, 0);
-//    
-//    NSUInteger lastColumn = floorf((CGRectGetMaxX(self.bounds)-(floorf(CGRectGetMaxX(self.bounds)/(self.cellWidth+separacion))+1)*separacion)/self.cellWidth)-1;
-//    firstColumn = MIN(lastColumn, self.itemsCount);
+    CGFloat minX = CGRectGetMinX(self.bounds);
+    NSUInteger firstColumn = floorf((minX - (floorf(minX/(self.cellWidth+self.marginWidth)) * self.marginWidth))/self.cellWidth);
+    firstColumn = MAX(firstColumn, 0);
     
-    
-    
-    
+    CGFloat maxX = CGRectGetMaxX(self.bounds);
+    NSUInteger  lastColumn = floorf((maxX - (floorf(maxX/(self.cellWidth+self.marginWidth))*self.marginWidth)+self.marginWidth)/self.cellWidth)+1;
+    lastColumn = MIN(lastColumn, self.itemsCount);
     
     CGFloat cellHeight = self.bounds.size.height;
     
@@ -210,7 +206,7 @@
         [self.contentView removeConstraints:cellConstraints];
 
         NSDictionary *viewDict2 = @{@"cell":cell, @"contentView": self.contentView};
-        NSDictionary *metrics = @{@"leftMargin":@(col*self.cellWidth), @"height":@(cellHeight), @"width": @(self.cellWidth-self.marginWidth)};
+        NSDictionary *metrics = @{@"leftMargin":@(col*(self.cellWidth+self.marginWidth)), @"height":@(cellHeight), @"width": @(self.cellWidth)};
         
         NSMutableArray *cellContraintsSave = [NSMutableArray array];
         
@@ -224,8 +220,6 @@
             [self.scrollableMenuDelegate PAScrollableMenu:self willDisplayCell:cell forIndexPath:path];
         }
     }
-    
-    NSLog(@"ancho ; %lu", (unsigned long)self.contentView.subviews.count);
     
     [super layoutSubviews];
 }
