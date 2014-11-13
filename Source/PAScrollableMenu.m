@@ -15,13 +15,17 @@
 
 @interface PAScrollableMenu ()
 
-@property(nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIView *contentView;
 
-@property(nonatomic, assign) NSUInteger itemsCount;
-@property(nonatomic, strong) NSMutableSet* visibleCells;
-@property(nonatomic, strong) NSMutableDictionary* visibleCellsMapping;
-@property(nonatomic, strong) NSMutableDictionary* visibleCellsConstraints;
-@property(nonatomic, strong) NSMutableSet* recyclePool;
+@property (nonatomic, assign) NSUInteger itemsCount;
+@property (nonatomic, strong) NSMutableSet* visibleCells;
+@property (nonatomic, strong) NSMutableDictionary* visibleCellsMapping;
+@property (nonatomic, strong) NSMutableDictionary* visibleCellsConstraints;
+@property (nonatomic, strong) NSMutableSet* recyclePool;
+@property (nonatomic, assign) CGFloat marginWidth;
+@property (nonatomic, assign) CGFloat cellWidth;
+
+@property (nonatomic, assign, getter=isCellWidthManual) BOOL cellWidthManual;
 
 @end
 
@@ -69,7 +73,7 @@
     self.visibleCellsMapping = [NSMutableDictionary dictionary];
     self.visibleCellsConstraints = [NSMutableDictionary dictionary];
     self.recyclePool = [NSMutableSet set];
-    self.marginWidth = 10.f;
+    self.marginWidth = 5.f;
     self.cellWidth = 100;
     
 }
@@ -84,6 +88,15 @@
     ReallyDebug
     
     [self setItemsCount:[self.scrollableMenuDataSource numberOfItemsInPAScrollableMenu:self]];
+    
+    if ([self.scrollableMenuDataSource respondsToSelector:@selector(cellWidthInPAScrollableMenu:)]) {
+        [self setCellWidthManual:YES];
+        [self setCellWidth:[self.scrollableMenuDataSource cellWidthInPAScrollableMenu:self]];
+    }
+    
+    if ([self.scrollableMenuDataSource respondsToSelector:@selector(marginWidthInPAScrollableMenu:)]) {
+        [self setMarginWidth:[self.scrollableMenuDataSource marginWidthInPAScrollableMenu:self]];
+    }
     
     [self.contentView removeConstraints:self.contentView.constraints];
     
@@ -102,20 +115,6 @@
 
     [self setNeedsLayout];
     
-}
-
-- (void)setMarginWidth:(CGFloat)val{
-    ReallyDebug
-    
-    _marginWidth = val;
-    [self setNeedsLayout]; // no need to reload all data, only relayout.
-}
-
-- (void)setCellWidth:(CGFloat)cellWidth{
-    ReallyDebug
-    
-    _cellWidth = cellWidth;
-    [self setNeedsDisplay];
 }
 
 - (void)deselectSelectedCellsAnimated:(BOOL)animated{

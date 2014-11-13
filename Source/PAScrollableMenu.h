@@ -13,11 +13,15 @@
 
 @class PAScrollableMenu;
 
-@protocol PAScrollableMenuDataSource
+@protocol PAScrollableMenuDataSource <NSObject>
 
 @required
 - (NSUInteger)numberOfItemsInPAScrollableMenu:(PAScrollableMenu*)aScrollableMenu;
 - (PAScrollableMenuCell*)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu cellAtIndexPath:(NSIndexPath*)indexPath;
+
+@optional
+- (CGFloat)cellWidthInPAScrollableMenu:(PAScrollableMenu*)aScrollableMenu;
+- (CGFloat)marginWidthInPAScrollableMenu:(PAScrollableMenu*)aScrollableMenu;
 
 @end
 
@@ -36,14 +40,10 @@
 - (void)reloadData;
 - (void)setIndexPathForSelectedCell:(NSIndexPath *)indexPath animated:(BOOL)animated;
 
-@property(nonatomic, assign) IBOutlet id<PAScrollableMenuDelegate> scrollableMenuDelegate;
-@property(nonatomic, assign) IBOutlet id<PAScrollableMenuDataSource> scrollableMenuDataSource;
+@property (nonatomic, assign) IBOutlet id<PAScrollableMenuDelegate> scrollableMenuDelegate;
+@property (nonatomic, assign) IBOutlet id<PAScrollableMenuDataSource> scrollableMenuDataSource;
 
-@property(nonatomic, assign) CGFloat marginWidth;
-@property(nonatomic, assign) CGFloat cellWidth;
-
-@property(nonatomic, strong) NSIndexPath* indexPathForSelectedCell;
-//! Identical to set indexPathForSelectedRow to nil
+@property (nonatomic, strong) NSIndexPath* indexPathForSelectedCell;
 - (void)deselectSelectedCellsAnimated:(BOOL)animated;
 
 @end

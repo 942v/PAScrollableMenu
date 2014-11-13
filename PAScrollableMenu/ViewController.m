@@ -45,7 +45,7 @@
     [self.scrollableMenuView reloadData];
 }
 
-#pragma mark - OHGridView Delegate & DataSource
+#pragma mark - PAScrollableMenu DataSource
 
 - (NSUInteger)numberOfItemsInPAScrollableMenu:(PAScrollableMenu *)aScrollableMenu{
     ReallyDebug
@@ -60,8 +60,6 @@
         
         // First simple way to set a background
         //cell.backgroundColor = [UIColor grayColor]; // One way
-        
-        // Customize textLabel font size
     }
     
     NSString* itemName = [self.items objectAtIndex:indexPath.section];
@@ -74,6 +72,8 @@
     
     return cell;
 }
+
+#pragma mark - PAScrollableMenu Delegate
 
 - (void)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu didSelectCellAtIndexPath:(NSIndexPath *)indexPath{
     ReallyDebug
@@ -96,27 +96,3 @@
 }
 
 @end
-
-/*
- 
- ////////////////////////////////////////////////////////////////////////////////////////////////////
-
- 
- ////////////////////////////////////////////////////////////////////////////////////////////////////
- #pragma mark - UIAlertView Delegate
- 
- -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
- {
-	[(OHGridView*)self.view deselectSelectedCellsAnimated:YES];
- }
- 
- ////////////////////////////////////////////////////////////////////////////////////////////////////
- #pragma mark - Interface Orientation
- 
- -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
- {
-	return YES;
- }
- 
-
- */
