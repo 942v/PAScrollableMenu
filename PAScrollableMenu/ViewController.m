@@ -108,7 +108,7 @@
 - (IBAction)cambiarActn:(id)sender {
     static CGFloat size;
     size++;
-    [PAAnimatableLabel animateWithDuration:0 animations:^{
+    [PAAnimatableLabel animateWithDuration:.3f animations:^{
         [self.animatableLabel setFontSize:self.animatableLabel.fontSize+size];
     }];
 }
