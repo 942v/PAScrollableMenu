@@ -25,19 +25,17 @@
 @property (nonatomic, assign) CGFloat marginWidth;
 @property (nonatomic, assign) CGFloat cellWidth;
 
-@property (nonatomic, assign, getter=isCellWidthManual) BOOL cellWidthManual;
-
 @end
 
 @implementation PAScrollableMenu
 
-#pragma mark - Init/Dealloc
+#pragma mark - Initialization
 
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     
     if (self) {
-        [self configure];
+        [self setup];
     }
     
     return self;
@@ -47,13 +45,13 @@
     self = [super initWithCoder:aDecoder];
     
     if (self){
-        [self configure];
+        [self setup];
     }
     
     return self;
 }
 
-- (void)configure{
+- (void)setup{
     ReallyDebug
     
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -73,9 +71,7 @@
     self.visibleCellsMapping = [NSMutableDictionary dictionary];
     self.visibleCellsConstraints = [NSMutableDictionary dictionary];
     self.recyclePool = [NSMutableSet set];
-    self.marginWidth = 5.f;
-    self.cellWidth = 100;
-    
+    self.marginWidth = 0.f;
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow{
@@ -88,11 +84,7 @@
     ReallyDebug
     
     [self setItemsCount:[self.scrollableMenuDataSource numberOfItemsInPAScrollableMenu:self]];
-    
-    if ([self.scrollableMenuDataSource respondsToSelector:@selector(cellWidthInPAScrollableMenu:)]) {
-        [self setCellWidthManual:YES];
-        [self setCellWidth:[self.scrollableMenuDataSource cellWidthInPAScrollableMenu:self]];
-    }
+    [self setCellWidth:[self.scrollableMenuDataSource cellWidthInPAScrollableMenu:self]];
     
     if ([self.scrollableMenuDataSource respondsToSelector:@selector(marginWidthInPAScrollableMenu:)]) {
         [self setMarginWidth:[self.scrollableMenuDataSource marginWidthInPAScrollableMenu:self]];
@@ -167,30 +159,27 @@
     if (self.itemsCount == 0) return;
     
     // !!!: ESTA ES LA WAA Q JODE
-    /*NSUInteger firstColumn = floorf( CGRectGetMinX(self.bounds) / self.cellWidth );
-    firstColumn = MAX(firstColumn, 0);
+    /*NSUInteger firstSeenCellIndex = floorf( CGRectGetMinX(self.bounds) / self.cellWidth );
+    firstSeenCellIndex = MAX(firstSeenCellIndex, 0);
     
-    NSUInteger lastColumn = floorf( (CGRectGetMaxX(self.bounds)-1) / self.cellWidth ) + 1;
-    lastColumn = MIN(lastColumn, self.itemsCount);*/
-    
-    //voilà
-    //fix para soportar separacion entre celdas
+    NSUInteger lastSeenCellIndex = floorf( (CGRectGetMaxX(self.bounds)-1) / self.cellWidth ) + 1;
+    lastSeenCellIndex = MIN(lastColumn, self.itemsCount);*/
     
     CGFloat minX = CGRectGetMinX(self.bounds);
-    NSUInteger firstColumn = floorf((minX - (floorf(minX/(self.cellWidth+self.marginWidth)) * self.marginWidth))/self.cellWidth);
-    firstColumn = MAX(firstColumn, 0);
+    NSUInteger firstSeenCellIndex = floorf((minX - (floorf(minX/(self.cellWidth+self.marginWidth)) * self.marginWidth))/self.cellWidth);
+    firstSeenCellIndex = MAX(firstSeenCellIndex, 0);
     
     CGFloat maxX = CGRectGetMaxX(self.bounds);
-    NSUInteger  lastColumn = floorf((maxX - (floorf(maxX/(self.cellWidth+self.marginWidth))*self.marginWidth)+self.marginWidth)/self.cellWidth)+1;
-    lastColumn = MIN(lastColumn, self.itemsCount);
+    NSUInteger  lastSeenCellIndex = floorf((maxX - (floorf(maxX/(self.cellWidth+self.marginWidth))*self.marginWidth)+self.marginWidth)/self.cellWidth)+1;
+    lastSeenCellIndex = MIN(lastSeenCellIndex, self.itemsCount);
     
     CGFloat cellHeight = self.bounds.size.height;
     
-    for (NSUInteger col = firstColumn; col<lastColumn; ++col){
+    for (NSUInteger cellIndex = firstSeenCellIndex; cellIndex<lastSeenCellIndex; ++cellIndex){
         
         //if (itemIndex >= self.itemsCount) return;
         
-        NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:col];
+        NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:cellIndex];
         PAScrollableMenuCell* cell = [self.visibleCellsMapping objectForKey:path];
         if (!cell){
             cell = [self.scrollableMenuDataSource PAScrollableMenu:self cellAtIndexPath:path];
@@ -205,7 +194,7 @@
         [self.contentView removeConstraints:cellConstraints];
 
         NSDictionary *viewDict2 = @{@"cell":cell, @"contentView": self.contentView};
-        NSDictionary *metrics = @{@"leftMargin":@(col*(self.cellWidth+self.marginWidth)), @"height":@(cellHeight), @"width": @(self.cellWidth)};
+        NSDictionary *metrics = @{@"leftMargin":@(cellIndex*(self.cellWidth+self.marginWidth)), @"height":@(cellHeight), @"width": @(self.cellWidth)};
         
         NSMutableArray *cellContraintsSave = [NSMutableArray array];
         

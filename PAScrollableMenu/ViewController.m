@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "PAScrollableMenu.h"
+#import "PAAnimatableLabel.h"
 
 #define IfDebug Debug==1
 #define ReallyDebug if(IfDebug)NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
@@ -18,6 +19,7 @@
 
 @property (weak, nonatomic) IBOutlet PAScrollableMenu *scrollableMenuView;
 @property (nonatomic, strong) NSMutableArray *items;
+@property (weak, nonatomic) IBOutlet PAAnimatableLabel *animatableLabel;
 
 @end
 
@@ -38,7 +40,7 @@
     
     self.items = [NSMutableArray array];
     
-    for (int i = 0; i<40; i++) {
+    for (int i = 0; i<1000; i++) {
         [self.items addObject:[NSString stringWithFormat:@"Pestanha %i", i]];
     }
     
@@ -73,6 +75,14 @@
     return cell;
 }
 
+- (CGFloat)marginWidthInPAScrollableMenu:(PAScrollableMenu *)aScrollableMenu{
+    return 4.f;
+}
+
+- (CGFloat)cellWidthInPAScrollableMenu:(PAScrollableMenu *)aScrollableMenu{
+    return 100.f;
+}
+
 #pragma mark - PAScrollableMenu Delegate
 
 - (void)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu didSelectCellAtIndexPath:(NSIndexPath *)indexPath{
@@ -93,6 +103,14 @@
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration{
     ReallyDebug
     [self.scrollableMenuView reloadData];
+}
+
+- (IBAction)cambiarActn:(id)sender {
+    static CGFloat size;
+    size++;
+    [PAAnimatableLabel animateWithDuration:0 animations:^{
+        [self.animatableLabel setFontSize:self.animatableLabel.fontSize+size];
+    }];
 }
 
 @end

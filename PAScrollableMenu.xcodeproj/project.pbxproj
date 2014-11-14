@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1159D44A1A147EA7003BCE38 /* PAAnimatableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1159D4491A147EA7003BCE38 /* PAAnimatableLabel.m */; };
+		1159D4501A148145003BCE38 /* UIFont+CoreTextExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1159D44E1A148145003BCE38 /* UIFont+CoreTextExtensions.m */; };
+		1159D4521A148385003BCE38 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1159D4511A148385003BCE38 /* QuartzCore.framework */; };
 		116CDAA81A047EBA006F738C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 116CDAA71A047EBA006F738C /* main.m */; };
 		116CDAAB1A047EBA006F738C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 116CDAAA1A047EBA006F738C /* AppDelegate.m */; };
 		116CDAAE1A047EBA006F738C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 116CDAAD1A047EBA006F738C /* ViewController.m */; };
@@ -29,6 +32,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1159D4481A147EA7003BCE38 /* PAAnimatableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAAnimatableLabel.h; sourceTree = "<group>"; };
+		1159D4491A147EA7003BCE38 /* PAAnimatableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAAnimatableLabel.m; sourceTree = "<group>"; };
+		1159D44D1A148145003BCE38 /* UIFont+CoreTextExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+CoreTextExtensions.h"; sourceTree = "<group>"; };
+		1159D44E1A148145003BCE38 /* UIFont+CoreTextExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+CoreTextExtensions.m"; sourceTree = "<group>"; };
+		1159D4511A148385003BCE38 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		116CDAA21A047EBA006F738C /* PAScrollableMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PAScrollableMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		116CDAA61A047EBA006F738C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		116CDAA71A047EBA006F738C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -53,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1159D4521A148385003BCE38 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,9 +75,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1159D4471A147E5A003BCE38 /* Subclases */ = {
+			isa = PBXGroup;
+			children = (
+				1159D4481A147EA7003BCE38 /* PAAnimatableLabel.h */,
+				1159D4491A147EA7003BCE38 /* PAAnimatableLabel.m */,
+				1159D44D1A148145003BCE38 /* UIFont+CoreTextExtensions.h */,
+				1159D44E1A148145003BCE38 /* UIFont+CoreTextExtensions.m */,
+			);
+			path = Subclases;
+			sourceTree = "<group>";
+		};
 		116CDA991A047EB9006F738C = {
 			isa = PBXGroup;
 			children = (
+				1159D4511A148385003BCE38 /* QuartzCore.framework */,
 				116CDACB1A047EC2006F738C /* Source */,
 				116CDAA41A047EBA006F738C /* PAScrollableMenu */,
 				116CDABE1A047EBA006F738C /* PAScrollableMenuTests */,
@@ -129,6 +150,7 @@
 		116CDACB1A047EC2006F738C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1159D4471A147E5A003BCE38 /* Subclases */,
 				116CDACC1A048113006F738C /* PAScrollableMenu.h */,
 				116CDACD1A048113006F738C /* PAScrollableMenu.m */,
 				11BA0E3E1A132FFF00FEA38B /* PAScrollableMenuCell.h */,
@@ -241,8 +263,10 @@
 				116CDAAE1A047EBA006F738C /* ViewController.m in Sources */,
 				116CDAAB1A047EBA006F738C /* AppDelegate.m in Sources */,
 				116CDACE1A048113006F738C /* PAScrollableMenu.m in Sources */,
+				1159D4501A148145003BCE38 /* UIFont+CoreTextExtensions.m in Sources */,
 				11BA0E401A132FFF00FEA38B /* PAScrollableMenuCell.m in Sources */,
 				116CDAA81A047EBA006F738C /* main.m in Sources */,
+				1159D44A1A147EA7003BCE38 /* PAAnimatableLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
