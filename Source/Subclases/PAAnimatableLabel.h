@@ -23,7 +23,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) PATextVerticalAlignment verticalTextAlignment;
 @property (nonatomic, readonly) CATextLayer *textLayer;
 
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
-+ (void)changes:(void (^)(void))changes;
+- (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
+- (void)changes:(void (^)(void))changes;
 
 @end

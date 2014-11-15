@@ -37,10 +37,11 @@
 }
 
 - (void)initializeTextLayer{
-    _textLayer = [[CATextLayer alloc] init];
+    _textLayer = [CATextLayer layer];
     [_textLayer setFrame:self.bounds];
-    _textLayer.contentsScale = [[UIScreen mainScreen] scale];
-    _textLayer.rasterizationScale = [[UIScreen mainScreen] scale];
+    [_textLayer setContentsScale:[[UIScreen mainScreen] scale]];
+    [_textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
+    [_textLayer setBackgroundColor:[[UIColor redColor] CGColor]];
     
     // Initialize the default.
     self.textColor = [super textColor];
@@ -78,12 +79,14 @@
 }
 
 - (void)setFont:(UIFont *)font{
-    CTFontRef fontRef = font.CTFont;
-    _textLayer.font = fontRef;
-    if (_fontSize!=font.pointSize)_fontSize = font.pointSize;
-    _textLayer.fontSize = _fontSize;
-    CFRelease(fontRef);
-    [self setNeedsDisplay];
+    if (font) {
+        CTFontRef fontRef = font.CTFont;
+        _textLayer.font = fontRef;
+        if (_fontSize!=font.pointSize)_fontSize = font.pointSize;
+        _textLayer.fontSize = _fontSize;
+        CFRelease(fontRef);
+        [self setNeedsDisplay];
+    }
 }
 
 - (void)setFontWithName:(NSString*)fontName{
@@ -221,22 +224,27 @@
     [self setNeedsDisplay];
 }
 
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations{
+- (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations{
     if (duration==0) {
         [self changes:^{
             animations();
         }];
         return;
     }
+    
     [CATransaction begin];
     [CATransaction setAnimationDuration:duration];
+    [CATransaction setDisableActions:NO];
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
     animations();
     [CATransaction commit];
 }
 
-+ (void)changes:(void (^)(void))changes{
+- (void)changes:(void (^)(void))changes{
     [CATransaction begin];
+    //[CATransaction setAnimationDuration:0.f];
     [CATransaction setDisableActions:YES];
+    //[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
     changes();
     [CATransaction commit];
 }

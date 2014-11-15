@@ -116,7 +116,7 @@
 
 - (void)setIndexPathForSelectedCell:(NSIndexPath *)indexPath{
     ReallyDebug
-    [self setIndexPathForSelectedCell:indexPath animated:NO];
+    [self setIndexPathForSelectedCell:indexPath animated:YES];
 }
 
 - (void)setIndexPathForSelectedCell:(NSIndexPath *)indexPath animated:(BOOL)animated{
@@ -128,6 +128,11 @@
         
         [[self.visibleCellsMapping objectForKey:_indexPathForSelectedCell] setSelected:YES animated:animated];
     }
+}
+
+- (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath{
+    ReallyDebug
+    return indexPath ? (indexPath.section + indexPath.row * self.itemsCount) : -1;
 }
 
 
@@ -184,7 +189,14 @@
         if (!cell){
             cell = [self.scrollableMenuDataSource PAScrollableMenu:self cellAtIndexPath:path];
             cell.indexPath = path;
-            cell.selected = (path == self.indexPathForSelectedCell);
+
+            if (self.indexPathForSelectedCell){
+                BOOL seleccionala = [self.indexPathForSelectedCell compare:path]==NSOrderedSame;
+                if (seleccionala!=cell.selected)cell.selected = seleccionala;
+            }else{
+                if (cell.selected)cell.selected = NO;
+            }
+
             [self.contentView insertSubview:cell atIndex:self.visibleCells.count];
             [self.visibleCells addObject:cell];
             [self.visibleCellsMapping setObject:cell forKey:path];

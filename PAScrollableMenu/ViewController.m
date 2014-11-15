@@ -8,22 +8,25 @@
 
 #import "ViewController.h"
 #import "PAScrollableMenu.h"
-#import "PAAnimatableLabel.h"
 
 #define IfDebug Debug==1
 #define ReallyDebug if(IfDebug)NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
 
 #define Debug 0
 
-@interface ViewController () <PAScrollableMenuDataSource, PAScrollableMenuDelegate>
+@interface ViewController () <PAScrollableMenuDataSource, PAScrollableMenuDelegate, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet PAScrollableMenu *scrollableMenuView;
 @property (nonatomic, strong) NSMutableArray *items;
-@property (weak, nonatomic) IBOutlet PAAnimatableLabel *animatableLabel;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @end
 
-@implementation ViewController
+@implementation ViewController{
+    CGFloat red1, green1, blue1, alpha1;
+    CGFloat red2, green2, blue2, alpha2;
+    CGFloat fontSizeInicial;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,11 +43,22 @@
     
     self.items = [NSMutableArray array];
     
-    for (int i = 0; i<1000; i++) {
+    for (int i = 0; i<10; i++) {
         [self.items addObject:[NSString stringWithFormat:@"Pestanha %i", i]];
     }
     
     [self.scrollableMenuView reloadData];
+    UIView *contentSize = [UIView new];
+    [contentSize setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.scrollView addSubview:contentSize];
+    
+    NSDictionary *metrics = @{@"width":@(self.scrollView.bounds.size.width*2), @"height":@(self.scrollView.bounds.size.height)};
+    [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentSize(width)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(contentSize)]];
+    [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentSize(height)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(contentSize)]];
+    
+    /*[self.animatableLabel.textColor getRed:&red1 green:&green1 blue:&blue1 alpha:&alpha1];
+    [[UIColor redColor] getRed:&red2 green:&green2 blue:&blue2 alpha:&alpha2];
+     fontSizeInicial = self.animatableLabel.fontSize;*/
 }
 
 #pragma mark - PAScrollableMenu DataSource
@@ -60,8 +74,10 @@
     if (!cell){
         cell = [PAScrollableMenuCell cell];
         
-        // First simple way to set a background
-        //cell.backgroundColor = [UIColor grayColor]; // One way
+        [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
+        [cell setSelectedColor:[UIColor yellowColor]];
+        [cell setSelectedFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:50]];
+        [cell finishSetup];
     }
     
     NSString* itemName = [self.items objectAtIndex:indexPath.section];
@@ -87,17 +103,7 @@
 
 - (void)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu didSelectCellAtIndexPath:(NSIndexPath *)indexPath{
     ReallyDebug
-    NSLog(@"Seleccionar");
-    /*
-     NSUInteger idx = [aGridView indexForIndexPath:indexPath];
-     NSString* msg = [self.items objectAtIndex:idx];
-     UIAlertView* alert = noarc_autorelease([[UIAlertView alloc] initWithTitle:@"Tap"
-     message:msg
-     delegate:self
-     cancelButtonTitle:@"OK"
-     otherButtonTitles:nil]);
-     [alert show];
-     */
+    NSLog(@"Seleccionar: %i", [aScrollableMenu indexForIndexPath:indexPath]);
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration{
@@ -105,12 +111,26 @@
     [self.scrollableMenuView reloadData];
 }
 
-- (IBAction)cambiarActn:(id)sender {
+/*- (IBAction)cambiarActn:(id)sender {
     static CGFloat size;
     size++;
     [PAAnimatableLabel animateWithDuration:.3f animations:^{
         [self.animatableLabel setFontSize:self.animatableLabel.fontSize+size];
+        [self.animatableLabel setTextColor:[UIColor redColor]];
     }];
 }
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    static CGFloat com1, com2, com3;
+    
+    com1 = [self componenteColorInicial:red1 colorFinal:red2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
+    com2 = [self componenteColorInicial:green1 colorFinal:green2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
+    com3 = [self componenteColorInicial:blue1 colorFinal:blue2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
+    
+    [self.animatableLabel setTextColor:[UIColor colorWithRed:com1 green:com2 blue:com3 alpha:alpha1]];
+    [self.animatableLabel setFontSize:[self mateConValorInicial:fontSizeInicial valorFinal:fontSizeInicial+10 contenOffset:self.scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width]];
+}*/
+
+
 
 @end

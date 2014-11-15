@@ -7,16 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PAAnimatableLabel.h"
 
 @interface PAScrollableMenuCell : UIView
 
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
+@property (nonatomic, strong) IBOutlet PAAnimatableLabel *textLabel;
 
 @property (nonatomic, strong) NSIndexPath *indexPath;
-@property (nonatomic, assign) BOOL selected;
+
+@property (nonatomic, assign, getter=isSelected) BOOL selected;
+@property (nonatomic, strong) UIColor *selectedColor;
+@property (nonatomic, strong) UIFont *selectedFont;
 
 + (PAScrollableMenuCell*)cell;
 
-- (void)setSelected:(BOOL)select animated:(BOOL)animated;
+- (void)setSelected:(BOOL)sel animated:(BOOL)animated;
+- (void)finishSetup;
 
 @end
