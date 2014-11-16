@@ -22,11 +22,7 @@
 
 @end
 
-@implementation ViewController{
-    CGFloat red1, green1, blue1, alpha1;
-    CGFloat red2, green2, blue2, alpha2;
-    CGFloat fontSizeInicial;
-}
+@implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -43,22 +39,42 @@
     
     self.items = [NSMutableArray array];
     
-    for (int i = 0; i<10; i++) {
-        [self.items addObject:[NSString stringWithFormat:@"Pestanha %i", i]];
-    }
-    
-    [self.scrollableMenuView reloadData];
     UIView *contentSize = [UIView new];
     [contentSize setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.scrollView addSubview:contentSize];
     
-    NSDictionary *metrics = @{@"width":@(self.scrollView.bounds.size.width*2), @"height":@(self.scrollView.bounds.size.height)};
+    UIView *pageView;
+    
+    NSDictionary *pageMetrics = @{@"width":@(self.scrollView.bounds.size.width), @"height":@(self.scrollView.bounds.size.height)};
+    
+    for (int i = 0; i<10; i++) {
+        [self.items addObject:[NSString stringWithFormat:@"Pestanha %i", i]];
+        
+        UIView *previousPage = [contentSize.subviews lastObject];
+        
+        pageView = [UIView new];
+        [pageView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [pageView setBackgroundColor:[self randomColor]];
+        [contentSize addSubview:pageView];
+        
+        NSDictionary *pageViewDict = @{@"pageView":pageView, @"previousPage":previousPage?previousPage:@1};
+        
+        [contentSize addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:%@[pageView(width)]", previousPage?@"[previousPage]":@"|"] options:0 metrics:pageMetrics views:pageViewDict]];
+        [contentSize addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[pageView(height)]|" options:0 metrics:pageMetrics views:pageViewDict]];
+    }
+    
+    NSDictionary *metrics = @{@"width":@(self.scrollView.bounds.size.width*contentSize.subviews.count), @"height":@(self.scrollView.bounds.size.height)};
     [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentSize(width)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(contentSize)]];
     [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentSize(height)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(contentSize)]];
     
-    /*[self.animatableLabel.textColor getRed:&red1 green:&green1 blue:&blue1 alpha:&alpha1];
-    [[UIColor redColor] getRed:&red2 green:&green2 blue:&blue2 alpha:&alpha2];
-     fontSizeInicial = self.animatableLabel.fontSize;*/
+    [self.scrollableMenuView reloadData];
+}
+
+- (UIColor *)randomColor{
+    CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
+    CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
+    CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
+    return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
 }
 
 #pragma mark - PAScrollableMenu DataSource
@@ -111,16 +127,7 @@
     [self.scrollableMenuView reloadData];
 }
 
-/*- (IBAction)cambiarActn:(id)sender {
-    static CGFloat size;
-    size++;
-    [PAAnimatableLabel animateWithDuration:.3f animations:^{
-        [self.animatableLabel setFontSize:self.animatableLabel.fontSize+size];
-        [self.animatableLabel setTextColor:[UIColor redColor]];
-    }];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+/*- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     static CGFloat com1, com2, com3;
     
     com1 = [self componenteColorInicial:red1 colorFinal:red2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
