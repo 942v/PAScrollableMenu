@@ -19,6 +19,8 @@
 		116CDAB61A047EBA006F738C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 116CDAB41A047EBA006F738C /* LaunchScreen.xib */; };
 		116CDAC21A047EBA006F738C /* PAScrollableMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 116CDAC11A047EBA006F738C /* PAScrollableMenuTests.m */; };
 		116CDACE1A048113006F738C /* PAScrollableMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 116CDACD1A048113006F738C /* PAScrollableMenu.m */; };
+		118296451A18647000DABF1B /* PAScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 118296441A18647000DABF1B /* PAScrollView.m */; };
+		118296481A1864A400DABF1B /* PAScrollViewPageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 118296471A1864A400DABF1B /* PAScrollViewPageCell.m */; };
 		11BA0E401A132FFF00FEA38B /* PAScrollableMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +57,10 @@
 		116CDAC11A047EBA006F738C /* PAScrollableMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PAScrollableMenuTests.m; sourceTree = "<group>"; };
 		116CDACC1A048113006F738C /* PAScrollableMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollableMenu.h; sourceTree = "<group>"; };
 		116CDACD1A048113006F738C /* PAScrollableMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollableMenu.m; sourceTree = "<group>"; };
+		118296431A18647000DABF1B /* PAScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollView.h; sourceTree = "<group>"; };
+		118296441A18647000DABF1B /* PAScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollView.m; sourceTree = "<group>"; };
+		118296461A1864A400DABF1B /* PAScrollViewPageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollViewPageCell.h; sourceTree = "<group>"; };
+		118296471A1864A400DABF1B /* PAScrollViewPageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollViewPageCell.m; sourceTree = "<group>"; };
 		11BA0E3E1A132FFF00FEA38B /* PAScrollableMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollableMenuCell.h; sourceTree = "<group>"; };
 		11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollableMenuCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -160,6 +166,10 @@
 				116CDACD1A048113006F738C /* PAScrollableMenu.m */,
 				11BA0E3E1A132FFF00FEA38B /* PAScrollableMenuCell.h */,
 				11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */,
+				118296431A18647000DABF1B /* PAScrollView.h */,
+				118296441A18647000DABF1B /* PAScrollView.m */,
+				118296461A1864A400DABF1B /* PAScrollViewPageCell.h */,
+				118296471A1864A400DABF1B /* PAScrollViewPageCell.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -268,7 +278,9 @@
 				116CDAAE1A047EBA006F738C /* ViewController.m in Sources */,
 				116CDAAB1A047EBA006F738C /* AppDelegate.m in Sources */,
 				116CDACE1A048113006F738C /* PAScrollableMenu.m in Sources */,
+				118296451A18647000DABF1B /* PAScrollView.m in Sources */,
 				1159D4501A148145003BCE38 /* UIFont+CoreTextExtensions.m in Sources */,
+				118296481A1864A400DABF1B /* PAScrollViewPageCell.m in Sources */,
 				11BA0E401A132FFF00FEA38B /* PAScrollableMenuCell.m in Sources */,
 				116CDAA81A047EBA006F738C /* main.m in Sources */,
 				113829051A16E244004B6C43 /* PAMath.m in Sources */,
