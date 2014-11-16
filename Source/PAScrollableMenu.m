@@ -109,7 +109,7 @@
     
 }
 
-- (void)deselectSelectedCellsAnimated:(BOOL)animated{
+- (void)deselectSelectedCellAnimated:(BOOL)animated{
     ReallyDebug
     [self setIndexPathForSelectedCell:nil animated:animated];
 }

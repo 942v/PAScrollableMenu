@@ -8,17 +8,18 @@
 
 #import "ViewController.h"
 #import "PAScrollableMenu.h"
+#import "PAScrollView.h"
 
 #define IfDebug Debug==1
 #define ReallyDebug if(IfDebug)NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
 
 #define Debug 0
 
-@interface ViewController () <PAScrollableMenuDataSource, PAScrollableMenuDelegate, UIScrollViewDelegate>
+@interface ViewController () <PAScrollableMenuDataSource, PAScrollableMenuDelegate, PAScrollViewDataSource, PAScrollViewDelegate, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet PAScrollableMenu *scrollableMenuView;
 @property (nonatomic, strong) NSMutableArray *items;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet PAScrollView *scrollView;
 
 @end
 
@@ -39,35 +40,16 @@
     
     self.items = [NSMutableArray array];
     
-    UIView *contentSize = [UIView new];
-    [contentSize setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.scrollView addSubview:contentSize];
-    
-    UIView *pageView;
-    
-    NSDictionary *pageMetrics = @{@"width":@(self.scrollView.bounds.size.width), @"height":@(self.scrollView.bounds.size.height)};
-    
     for (int i = 0; i<10; i++) {
         [self.items addObject:[NSString stringWithFormat:@"Pestanha %i", i]];
-        
-        UIView *previousPage = [contentSize.subviews lastObject];
-        
-        pageView = [UIView new];
-        [pageView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [pageView setBackgroundColor:[self randomColor]];
-        [contentSize addSubview:pageView];
-        
-        NSDictionary *pageViewDict = @{@"pageView":pageView, @"previousPage":previousPage?previousPage:@1};
-        
-        [contentSize addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:%@[pageView(width)]", previousPage?@"[previousPage]":@"|"] options:0 metrics:pageMetrics views:pageViewDict]];
-        [contentSize addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[pageView(height)]|" options:0 metrics:pageMetrics views:pageViewDict]];
     }
     
-    NSDictionary *metrics = @{@"width":@(self.scrollView.bounds.size.width*contentSize.subviews.count), @"height":@(self.scrollView.bounds.size.height)};
+    /*NSDictionary *metrics = @{@"width":@(self.scrollView.bounds.size.width*contentSize.subviews.count), @"height":@(self.scrollView.bounds.size.height)};
     [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentSize(width)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(contentSize)]];
-    [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentSize(height)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(contentSize)]];
+    [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentSize(height)]|" options:0 metrics:metrics views:NSDictionaryOfVariableBindings(contentSize)]];*/
     
     [self.scrollableMenuView reloadData];
+    [self.scrollView reloadData];
 }
 
 - (UIColor *)randomColor{
@@ -119,8 +101,29 @@
 
 - (void)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu didSelectCellAtIndexPath:(NSIndexPath *)indexPath{
     ReallyDebug
-    NSLog(@"Seleccionar: %i", [aScrollableMenu indexForIndexPath:indexPath]);
+    NSLog(@"Seleccionar: %li", (long)[aScrollableMenu indexForIndexPath:indexPath]);
 }
+
+#pragma mark - PAScrollView DataSource
+
+- (NSUInteger)numberOfPagesInPAScrollView:(PAScrollView *)aScrollView{
+    ReallyDebug
+    return self.items.count;
+}
+
+- (PAScrollViewPageCell *)PAScrollView:(PAScrollView *)aScrollView pageCellAtIndexPath:(NSIndexPath *)indexPath{
+    ReallyDebug
+    PAScrollViewPageCell* pageCell = [aScrollView dequeueReusablePageCell];
+    if (!pageCell){
+        pageCell = [PAScrollViewPageCell pageCell];
+        
+        [pageCell.containerView setBackgroundColor:[self randomColor]];
+    }
+    
+    return pageCell;
+}
+
+#pragma mark - Rotation Notification
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration{
     ReallyDebug

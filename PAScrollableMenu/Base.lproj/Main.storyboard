@@ -28,13 +28,14 @@
                                     <outlet property="scrollableMenuDelegate" destination="BYZ-38-t0r" id="174-J2-a0L"/>
                                 </connections>
                             </scrollView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bng-vG-TdS">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bng-vG-TdS" customClass="PAScrollView">
                                 <rect key="frame" x="0.0" y="472" width="600" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="XGH-vB-KLX"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="N4S-oc-IQY"/>
+                                    <outlet property="scrollViewDataSource" destination="BYZ-38-t0r" id="8g8-ty-kWl"/>
+                                    <outlet property="scrollViewDelegate" destination="BYZ-38-t0r" id="s26-Rh-vz1"/>
                                 </connections>
                             </scrollView>
                         </subviews>

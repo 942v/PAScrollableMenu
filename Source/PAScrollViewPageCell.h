@@ -10,4 +10,10 @@
 
 @interface PAScrollViewPageCell : UIView
 
+@property (nonatomic, strong) IBOutlet UIView *containerView;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic, assign, getter=isSelected) BOOL selected;
+
++ (PAScrollViewPageCell*)pageCell;
+
 @end

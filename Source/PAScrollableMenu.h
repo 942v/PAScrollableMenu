@@ -34,6 +34,8 @@
 
 @end
 
+#pragma mark - Interface
+
 @interface PAScrollableMenu : UIScrollView
 
 - (PAScrollableMenuCell*)dequeueReusableCell;
@@ -45,6 +47,6 @@
 
 @property (nonatomic, strong) NSIndexPath* indexPathForSelectedCell;
 - (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath;
-- (void)deselectSelectedCellsAnimated:(BOOL)animated;
+- (void)deselectSelectedCellAnimated:(BOOL)animated;
 
 @end
