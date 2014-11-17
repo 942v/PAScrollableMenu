@@ -55,8 +55,8 @@
     
     NSDictionary *viewDict = @{@"containerView":self.containerView};
     
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[containerView]|" options:0 metrics:nil views:viewDict]];
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[containerView]|" options:0 metrics:nil views:viewDict]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[containerView]|" options:0 metrics:nil views:viewDict]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[containerView]|" options:0 metrics:nil views:viewDict]];
 }
 
 @end

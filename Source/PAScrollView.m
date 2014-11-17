@@ -84,7 +84,7 @@
     
     [self.contentView removeConstraints:self.contentView.constraints];
     
-    self.contentSize = CGSizeMake((self.bounds.size.width*self.itemsCount)+(self.itemsCount-1), self.bounds.size.height);
+    self.contentSize = CGSizeMake((self.bounds.size.width*self.itemsCount), self.bounds.size.height);
     [self.contentView setFrame:(CGRect){
         .size = self.contentSize,
         .origin = CGPointZero
@@ -191,6 +191,8 @@
         
         NSDictionary *viewDict2 = @{@"pageCell":pageCell, @"contentView": self.contentView};
         NSDictionary *metrics = @{@"leftMargin":@(pageCellIndex*self.bounds.size.width), @"height":@(pageCellHeight), @"width": @(self.bounds.size.width)};
+        
+        NSLog(@"");
         
         NSMutableArray *pageCellContraintsSave = [NSMutableArray array];
         
