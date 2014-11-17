@@ -100,24 +100,21 @@
     [self setNeedsLayout];
 }
 
-- (void)deselectSelectedPageCellAnimated:(BOOL)animated{
+- (void)setIndexPathForCurrentPageCell:(NSIndexPath *)indexPath{
     ReallyDebug
-    [self setIndexPathForSelectedPageCell:nil animated:animated];
+    [self setIndexPathForCurrentPageCell:indexPath animated:YES];
 }
 
-- (void)setIndexPathForSelectedPageCell:(NSIndexPath *)indexPath{
+- (void)setIndexPathForCurrentPageCell:(NSIndexPath *)indexPath animated:(BOOL)animated{
     ReallyDebug
-    [self setIndexPathForSelectedPageCell:indexPath animated:YES];
-}
-
-- (void)setIndexPathForSelectedPageCell:(NSIndexPath *)indexPath animated:(BOOL)animated{
-    ReallyDebug
-    if (indexPath != _indexPathForSelectedPageCell){
-        [[self.visiblePageCellsMapping objectForKey:_indexPathForSelectedPageCell] setSelected:NO animated:animated];
+    if (indexPath != _indexPathForCurrentPageCell){
+        [self goToPageWithIndexPath:indexPath animated:animated];
         
-        _indexPathForSelectedPageCell = indexPath;
+        //[[self.visiblePageCellsMapping objectForKey:_indexPathForCurrentPageCell] setSelected:NO animated:animated];
         
-        [[self.visiblePageCellsMapping objectForKey:_indexPathForSelectedPageCell] setSelected:YES animated:animated];
+        _indexPathForCurrentPageCell = indexPath;
+        
+        //[[self.visiblePageCellsMapping objectForKey:_indexPathForCurrentPageCell] setSelected:YES animated:animated];
     }
 }
 
@@ -126,6 +123,12 @@
     return indexPath ? (indexPath.section + indexPath.row * self.itemsCount) : -1;
 }
 
+- (void)goToPageWithIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated{
+    ReallyDebug
+    
+    NSInteger contentOffsetX = indexPath.section*self.bounds.size.width;
+    [self setContentOffset:CGPointMake(contentOffsetX, 0) animated:animated];
+}
 
 
 - (PAScrollViewPageCell*)dequeueReusablePageCell{
@@ -134,7 +137,7 @@
     if (pageCell){
         [self.recyclePool removeObject:pageCell];
         
-        pageCell.selected = NO;
+        pageCell.currentPage = NO;
     }
     return pageCell;
 }
@@ -173,13 +176,6 @@
         if (!pageCell){
             pageCell = [self.scrollViewDataSource PAScrollView:self pageCellAtIndexPath:path];
             pageCell.indexPath = path;
-            
-            if (self.indexPathForSelectedPageCell){
-                BOOL seleccionala = [self.indexPathForSelectedPageCell compare:path]==NSOrderedSame;
-                if (seleccionala!=pageCell.selected)pageCell.selected = seleccionala;
-            }else{
-                if (pageCell.selected)pageCell.selected = NO;
-            }
             
             [self.contentView insertSubview:pageCell atIndex:self.visiblePageCells.count];
             [self.visiblePageCells addObject:pageCell];

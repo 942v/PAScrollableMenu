@@ -102,6 +102,7 @@
 - (void)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu didSelectCellAtIndexPath:(NSIndexPath *)indexPath{
     ReallyDebug
     NSLog(@"Seleccionar: %li", (long)[aScrollableMenu indexForIndexPath:indexPath]);
+    [self.scrollView setIndexPathForCurrentPageCell:indexPath animated:NO];
 }
 
 #pragma mark - PAScrollView DataSource
@@ -118,7 +119,29 @@
         pageCell = [PAScrollViewPageCell pageCell];
         
         [pageCell.containerView setBackgroundColor:[self randomColor]];
+        
+        UILabel *numberPage = [UILabel new];
+        [numberPage setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [numberPage setBackgroundColor:[UIColor redColor]];
+        [numberPage setTextAlignment:NSTextAlignmentCenter];
+        [numberPage setTextColor:[UIColor blackColor]];
+        [numberPage setFont:[UIFont fontWithName:@"HelveticaNeue" size:14]];
+        [numberPage sizeToFit];
+        [numberPage setMinimumScaleFactor:.5f];
+        [pageCell.containerView addSubview:numberPage];
+        
+        NSDictionary *viewDict =@{@"label":numberPage};
+        NSDictionary *metrics = @{@"margin":@0};
+        
+        [pageCell.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[label]|" options:NSLayoutFormatAlignAllCenterX metrics:metrics views:viewDict]];
+        [pageCell.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=margin)-[label]-(>=margin)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:viewDict]];
+        [pageCell.containerView addConstraint:[NSLayoutConstraint constraintWithItem:numberPage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:pageCell.containerView attribute:NSLayoutAttributeCenterX multiplier:1.f constant:0.f]];
+        [pageCell.containerView addConstraint:[NSLayoutConstraint constraintWithItem:numberPage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:pageCell.containerView attribute:NSLayoutAttributeCenterY multiplier:1.f constant:0.f]];
     }
+    
+    UILabel *label = [pageCell.containerView.subviews lastObject];
+    
+    [label setText:[NSString stringWithFormat:@"Pagina: %li", (long)[aScrollView indexForIndexPath:indexPath]]];
     
     return pageCell;
 }
@@ -130,16 +153,9 @@
     [self.scrollableMenuView reloadData];
 }
 
-/*- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    static CGFloat com1, com2, com3;
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
-    com1 = [self componenteColorInicial:red1 colorFinal:red2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
-    com2 = [self componenteColorInicial:green1 colorFinal:green2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
-    com3 = [self componenteColorInicial:blue1 colorFinal:blue2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
-    
-    [self.animatableLabel setTextColor:[UIColor colorWithRed:com1 green:com2 blue:com3 alpha:alpha1]];
-    [self.animatableLabel setFontSize:[self mateConValorInicial:fontSizeInicial valorFinal:fontSizeInicial+10 contenOffset:self.scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width]];
-}*/
+}
 
 
 

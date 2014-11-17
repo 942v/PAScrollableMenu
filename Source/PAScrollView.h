@@ -34,13 +34,12 @@
 
 - (PAScrollViewPageCell*)dequeueReusablePageCell;
 - (void)reloadData;
-- (void)setIndexPathForSelectedPageCell:(NSIndexPath *)indexPath animated:(BOOL)animated;
+- (void)setIndexPathForCurrentPageCell:(NSIndexPath *)indexPath animated:(BOOL)animated;
 
 @property (nonatomic, assign) IBOutlet id<PAScrollViewDelegate> scrollViewDelegate;
 @property (nonatomic, assign) IBOutlet id<PAScrollViewDataSource> scrollViewDataSource;
 
-@property (nonatomic, strong) NSIndexPath* indexPathForSelectedPageCell;
+@property (nonatomic, strong) NSIndexPath* indexPathForCurrentPageCell;
 - (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath;
-- (void)deselectSelectedPageCellAnimated:(BOOL)animated;
 
 @end

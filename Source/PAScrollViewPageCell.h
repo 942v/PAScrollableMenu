@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) IBOutlet UIView *containerView;
 @property (nonatomic, strong) NSIndexPath *indexPath;
-@property (nonatomic, assign, getter=isSelected) BOOL selected;
+@property (nonatomic, assign, getter=isCurrentPage) BOOL currentPage;
 
 + (PAScrollViewPageCell*)pageCell;
 
