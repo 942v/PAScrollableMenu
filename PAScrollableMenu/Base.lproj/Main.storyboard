@@ -34,6 +34,7 @@
                                     <constraint firstAttribute="height" constant="128" id="XGH-vB-KLX"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="xUT-gg-Okd"/>
                                     <outlet property="scrollViewDataSource" destination="BYZ-38-t0r" id="8g8-ty-kWl"/>
                                     <outlet property="scrollViewDelegate" destination="BYZ-38-t0r" id="s26-Rh-vz1"/>
                                 </connections>

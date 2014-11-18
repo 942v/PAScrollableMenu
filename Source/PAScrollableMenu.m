@@ -130,10 +130,51 @@
     }
 }
 
+- (void)changeToCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
+    if (offset<0) {
+        [self changeToPreviousCellWithOffset:offset pageWidth:pageWidth];
+    }else{
+        [self changeToNextCellWithOffset:offset pageWidth:pageWidth];
+    }
+}
+
+- (void)changeToNextCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
+    PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:_indexPathForSelectedCell];
+    [cellActual deselectWithOffset:offset sizeWidth:pageWidth];
+    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:_indexPathForSelectedCell.row inSection:_indexPathForSelectedCell.section+1];
+    PAScrollableMenuCell* cellSiguiente = [self.visibleCellsMapping objectForKey:nextIndex];
+    [cellSiguiente setSelectedWithOffset:offset sizeWidth:pageWidth];
+    
+    //_indexPathForSelectedCell = nextIndex;
+}
+
+- (void)changeToPreviousCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
+    PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:_indexPathForSelectedCell];
+    [cellActual deselectWithOffset:offset sizeWidth:pageWidth];
+    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:_indexPathForSelectedCell.row inSection:_indexPathForSelectedCell.section-1];
+    PAScrollableMenuCell* cellSiguiente = [self.visibleCellsMapping objectForKey:nextIndex];
+    [cellSiguiente setSelectedWithOffset:offset sizeWidth:pageWidth];
+    
+    //_indexPathForSelectedCell = nextIndex;
+}
+
 - (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath{
     ReallyDebug
     return indexPath ? (indexPath.section + indexPath.row * self.itemsCount) : -1;
 }
+
+
+
+/*
+ static CGFloat com1, com2, com3;
+ 
+ com1 = [self componenteColorInicial:red1 colorFinal:red2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
+ com2 = [self componenteColorInicial:green1 colorFinal:green2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
+ com3 = [self componenteColorInicial:blue1 colorFinal:blue2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
+ 
+ [self.animatableLabel setTextColor:[UIColor colorWithRed:com1 green:com2 blue:com3 alpha:alpha1]];
+ [self.animatableLabel setFontSize:[self mateConValorInicial:fontSizeInicial valorFinal:fontSizeInicial+10 contenOffset:self.scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width]];
+ */
 
 
 

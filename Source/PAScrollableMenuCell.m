@@ -8,6 +8,7 @@
 
 #import "PAScrollableMenuCell.h"
 #import "PAScrollableMenu.h"
+#import "PAMath.h"
 
 #define IfDebug Debug==1
 #define ReallyDebug if(IfDebug)NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
@@ -122,12 +123,68 @@
     }
 }
 
+- (void)setSelectedWithOffset:(CGFloat)offset sizeWidth:(CGFloat)sizeWidth{
+    ReallyDebug
+    static CGFloat redO, greenO, blueO, alphaO;
+    static CGFloat redS, greenS, blueS, alphaS;
+    
+    if (![self getOriginalColorRed:&redO green:&greenO blue:&blueO alpha:&alphaO] ||
+        ![self getSelectedColorRed:&redS green:&greenS blue:&blueS alpha:&alphaS]) return;
+    
+    static CGFloat redF, greenF, blueF;
+    NSLog(@"rO: %f", redO);
+    redF = [PAMath componenteColorInicial:redO colorFinal:redS contenOffset:offset anchoPagina:sizeWidth];
+    greenF = [PAMath componenteColorInicial:greenO colorFinal:greenS contenOffset:offset anchoPagina:sizeWidth];
+    blueF = [PAMath componenteColorInicial:blueO colorFinal:blueS contenOffset:offset anchoPagina:sizeWidth];
+    NSLog(@"rF: %f", redF);
+    [self.textLabel setTextColor:[UIColor colorWithRed:redF green:greenF blue:blueF alpha:alphaS]];
+    //[self.textLabel setFont:self.selectedFont];
+}
+
+- (void)deselectWithOffset:(CGFloat)offset sizeWidth:(CGFloat)sizeWidth{
+    ReallyDebug
+    static CGFloat redO, greenO, blueO, alphaO;
+    static CGFloat redS, greenS, blueS, alphaS;
+    
+    if (![self getOriginalColorRed:&redO green:&greenO blue:&blueO alpha:&alphaO] ||
+        ![self getSelectedColorRed:&redS green:&greenS blue:&blueS alpha:&alphaS]) return;
+    
+    static CGFloat redF, greenF, blueF;
+    
+    redF = [PAMath componenteColorInicial:redS colorFinal:redO contenOffset:offset anchoPagina:sizeWidth];
+    greenF = [PAMath componenteColorInicial:greenS colorFinal:greenO contenOffset:offset anchoPagina:sizeWidth];
+    blueF = [PAMath componenteColorInicial:blueS colorFinal:blueO contenOffset:offset anchoPagina:sizeWidth];
+    
+    [self.textLabel setTextColor:[UIColor colorWithRed:redF green:greenF blue:blueF alpha:alphaS]];
+    //[self.textLabel setFont:self.selectedFont];
+}
+
 - (void)setSelectedColor:(UIColor *)selectedColor{
     ReallyDebug
     _selectedColor = selectedColor;
     static CGFloat red, green, blue, alpha;
     [_selectedColor getRed:&red green:&green blue:&blue alpha:&alpha];
-    self.selectedColorRGB = @[@(red), @(green), @(blue), @(alpha)];
+    self.selectedColorRGB = @[[NSNumber numberWithFloat:red], [NSNumber numberWithFloat:green], [NSNumber numberWithFloat:blue], [NSNumber numberWithFloat:alpha]];
+}
+
+- (BOOL)getOriginalColorRed:(CGFloat *)red green:(CGFloat *)green blue:(CGFloat *)blue alpha:(CGFloat *)alpha{
+    return [self getRed:red green:green blue:blue alpha:alpha fromArray:self.originalColorRGB];
+}
+
+- (BOOL)getSelectedColorRed:(CGFloat *)red green:(CGFloat *)green blue:(CGFloat *)blue alpha:(CGFloat *)alpha{
+    return [self getRed:red green:green blue:blue alpha:alpha fromArray:self.selectedColorRGB];
+}
+
+- (BOOL)getRed:(CGFloat*)red green:(CGFloat *)green blue:(CGFloat *)blue alpha:(CGFloat *)alpha fromArray:(NSArray *)colorsArray{
+    if (colorsArray.count==4) {
+        *red = [[colorsArray firstObject] floatValue];
+        *green = [[colorsArray objectAtIndex:1] floatValue];
+        *blue = [[colorsArray objectAtIndex:2] floatValue];
+        *alpha = [[colorsArray lastObject] floatValue];
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (void)finishSetup{
@@ -135,7 +192,7 @@
     self.originalColor = self.textLabel.textColor;
     static CGFloat red, green, blue, alpha;
     [self.textLabel.textColor getRed:&red green:&green blue:&blue alpha:&alpha];
-    self.originalColorRGB = @[@(red), @(green), @(blue), @(alpha)];
+    self.originalColorRGB = @[[NSNumber numberWithFloat:red], [NSNumber numberWithFloat:green], [NSNumber numberWithFloat:blue], [NSNumber numberWithFloat:alpha]];
     self.originalFont = self.textLabel.font;
 }
 

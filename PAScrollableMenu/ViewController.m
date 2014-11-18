@@ -50,6 +50,8 @@
     
     [self.scrollableMenuView reloadData];
     [self.scrollView reloadData];
+    
+    [self.scrollableMenuView setIndexPathForSelectedCell:[NSIndexPath indexPathForRow:0 inSection:0]];
 }
 
 - (UIColor *)randomColor{
@@ -154,9 +156,10 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
+    ReallyDebug
+    if (scrollView==self.scrollView) {
+        [self.scrollableMenuView changeToCellWithOffset:scrollView.contentOffset.x pageWidth:self.scrollView.bounds.size.width];
+    }
 }
-
-
 
 @end

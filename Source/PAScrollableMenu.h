@@ -48,5 +48,6 @@
 @property (nonatomic, strong) NSIndexPath* indexPathForSelectedCell;
 - (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath;
 - (void)deselectSelectedCellAnimated:(BOOL)animated;
+- (void)changeToCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth;
 
 @end

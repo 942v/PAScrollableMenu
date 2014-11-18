@@ -22,6 +22,8 @@
 + (PAScrollableMenuCell*)cell;
 
 - (void)setSelected:(BOOL)sel animated:(BOOL)animated;
+- (void)setSelectedWithOffset:(CGFloat)offset sizeWidth:(CGFloat)sizeWidth;
+- (void)deselectWithOffset:(CGFloat)offset sizeWidth:(CGFloat)sizeWidth;
 - (void)finishSetup;
 
 @end
