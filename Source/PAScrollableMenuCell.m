@@ -132,13 +132,11 @@
         ![self getSelectedColorRed:&redS green:&greenS blue:&blueS alpha:&alphaS]) return;
     
     static CGFloat redF, greenF, blueF;
-    NSLog(@"rO: %f", redO);
     redF = [PAMath componenteColorInicial:redO colorFinal:redS contenOffset:offset anchoPagina:sizeWidth];
     greenF = [PAMath componenteColorInicial:greenO colorFinal:greenS contenOffset:offset anchoPagina:sizeWidth];
     blueF = [PAMath componenteColorInicial:blueO colorFinal:blueS contenOffset:offset anchoPagina:sizeWidth];
-    NSLog(@"rF: %f", redF);
     [self.textLabel setTextColor:[UIColor colorWithRed:redF green:greenF blue:blueF alpha:alphaS]];
-    //[self.textLabel setFont:self.selectedFont];
+    [self.textLabel setFontSize:[PAMath pointSizeInicial:self.originalFont.pointSize pointSizeFinal:self.selectedFont.pointSize contenOffset:offset anchoPagina:sizeWidth]];
 }
 
 - (void)deselectWithOffset:(CGFloat)offset sizeWidth:(CGFloat)sizeWidth{
@@ -156,7 +154,7 @@
     blueF = [PAMath componenteColorInicial:blueS colorFinal:blueO contenOffset:offset anchoPagina:sizeWidth];
     
     [self.textLabel setTextColor:[UIColor colorWithRed:redF green:greenF blue:blueF alpha:alphaS]];
-    //[self.textLabel setFont:self.selectedFont];
+    [self.textLabel setFontSize:[PAMath pointSizeInicial:self.selectedFont.pointSize pointSizeFinal:self.originalFont.pointSize contenOffset:offset anchoPagina:sizeWidth]];
 }
 
 - (void)setSelectedColor:(UIColor *)selectedColor{

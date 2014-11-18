@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "PAScrollableMenu.h"
 #import "PAScrollView.h"
+#import "PAMath.h"
 
 #define IfDebug Debug==1
 #define ReallyDebug if(IfDebug)NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
@@ -23,7 +24,9 @@
 
 @end
 
-@implementation ViewController
+@implementation ViewController{
+    CGFloat red1, red2, green1, green2, blue1, blue2;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -120,7 +123,7 @@
     if (!pageCell){
         pageCell = [PAScrollViewPageCell pageCell];
         
-        [pageCell.containerView setBackgroundColor:[self randomColor]];
+        //[pageCell.containerView setBackgroundColor:[self randomColor]];
         
         UILabel *numberPage = [UILabel new];
         [numberPage setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -157,9 +160,13 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     ReallyDebug
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     if (scrollView==self.scrollView) {
         [self.scrollableMenuView changeToCellWithOffset:scrollView.contentOffset.x pageWidth:self.scrollView.bounds.size.width];
     }
+    [CATransaction commit];
+    //[self.animatableLabel setFontSize:[self mateConValorInicial:fontSizeInicial valorFinal:fontSizeInicial+10 contenOffset:self.scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width]];
 }
 
 @end
