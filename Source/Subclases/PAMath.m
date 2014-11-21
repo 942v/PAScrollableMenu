@@ -14,6 +14,10 @@
     return [self mateConValorInicial:colorInicial valorFinal:colorFinal contenOffset:contentOffset anchoPagina:anchoPagina];
 }
 
++ (CGFloat)pointSizeInicial:(CGFloat)pointSizeInicial pointSizeFinal:(CGFloat)pointSizeFinal contenOffset:(CGFloat)contentOffset anchoPagina:(CGFloat)anchoPagina{
+    return [self mateConValorInicial:pointSizeInicial valorFinal:pointSizeFinal contenOffset:contentOffset anchoPagina:anchoPagina];
+}
+
 + (CGFloat)mateConValorInicial:(CGFloat)valorInicial valorFinal:(CGFloat)valorFinal contenOffset:(CGFloat)contentOffset anchoPagina:(CGFloat)anchoPagina{
     return valorInicial+(valorFinal-valorInicial)*contentOffset/anchoPagina;
 }

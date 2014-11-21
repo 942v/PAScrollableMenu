@@ -12,6 +12,6 @@
 @interface PAMath : NSObject
 
 + (CGFloat)componenteColorInicial:(CGFloat)colorInicial colorFinal:(CGFloat)colorFinal contenOffset:(CGFloat)contentOffset anchoPagina:(CGFloat)anchoPagina;
-+ (CGFloat)mateConValorInicial:(CGFloat)valorInicial valorFinal:(CGFloat)valorFinal contenOffset:(CGFloat)contentOffset anchoPagina:(CGFloat)anchoPagina;
++ (CGFloat)pointSizeInicial:(CGFloat)pointSizeInicial pointSizeFinal:(CGFloat)pointSizeFinal contenOffset:(CGFloat)contentOffset anchoPagina:(CGFloat)anchoPagina;
 
 @end
