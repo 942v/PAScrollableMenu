@@ -132,11 +132,11 @@
         ![self getSelectedColorRed:&redS green:&greenS blue:&blueS alpha:&alphaS]) return;
     
     static CGFloat redF, greenF, blueF;
-    NSLog(@"rO: %f", redO);
+
     redF = [PAMath componenteColorInicial:redO colorFinal:redS contenOffset:offset anchoPagina:sizeWidth];
     greenF = [PAMath componenteColorInicial:greenO colorFinal:greenS contenOffset:offset anchoPagina:sizeWidth];
     blueF = [PAMath componenteColorInicial:blueO colorFinal:blueS contenOffset:offset anchoPagina:sizeWidth];
-    NSLog(@"rF: %f", redF);
+
     [self.textLabel setTextColor:[UIColor colorWithRed:redF green:greenF blue:blueF alpha:alphaS]];
     //[self.textLabel setFont:self.selectedFont];
 }
