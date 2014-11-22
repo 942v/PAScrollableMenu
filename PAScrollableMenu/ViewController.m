@@ -54,7 +54,8 @@
     [self.scrollableMenuView reloadData];
     [self.scrollView reloadData];
     
-    [self.scrollableMenuView setIndexPathForSelectedCell:[NSIndexPath indexPathForRow:0 inSection:0]];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+    [self.scrollableMenuView setIndexPathForSelectedCell:indexPath];
 }
 
 - (UIColor *)randomColor{
@@ -107,7 +108,9 @@
 - (void)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu didSelectCellAtIndexPath:(NSIndexPath *)indexPath{
     ReallyDebug
     NSLog(@"Seleccionar: %li", (long)[aScrollableMenu indexForIndexPath:indexPath]);
-    [self.scrollView setIndexPathForCurrentPageCell:indexPath animated:NO];
+    [self.scrollableMenuView setNoScrolling:YES];
+    [self.scrollView setIndexPathForCurrentPageCell:indexPath];
+    [self.scrollableMenuView setNoScrolling:NO];
 }
 
 #pragma mark - PAScrollView DataSource
@@ -158,15 +161,21 @@
     [self.scrollableMenuView reloadData];
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    ReallyDebug
+    if (scrollView==self.scrollView) {
+        CGFloat pageWidth = scrollView.frame.size.width;
+        int currentPage = floor((scrollView.contentOffset.x - pageWidth/2)/pageWidth)+1;
+        [self.scrollableMenuView setIndexPathForSelectedCell:[NSIndexPath indexPathForRow:0 inSection:currentPage] animated:YES];
+    }
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     ReallyDebug
-    [CATransaction begin];
-    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    
     if (scrollView==self.scrollView) {
         [self.scrollableMenuView changeToCellWithOffset:scrollView.contentOffset.x pageWidth:self.scrollView.bounds.size.width];
     }
-    [CATransaction commit];
-    //[self.animatableLabel setFontSize:[self mateConValorInicial:fontSizeInicial valorFinal:fontSizeInicial+10 contenOffset:self.scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width]];
 }
 
 @end

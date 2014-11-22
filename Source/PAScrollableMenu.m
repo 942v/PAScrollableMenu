@@ -125,37 +125,58 @@
         [[self.visibleCellsMapping objectForKey:_indexPathForSelectedCell] setSelected:NO animated:animated];
         
         _indexPathForSelectedCell = indexPath;
-        
+
         [[self.visibleCellsMapping objectForKey:_indexPathForSelectedCell] setSelected:YES animated:animated];
+        
+        [self scrollRectToVisibleCenteredOnSelectedIndexCell];
+        
+        if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:didSelectCellAtIndexPath:)]){
+            [self.scrollableMenuDelegate PAScrollableMenu:self didSelectCellAtIndexPath:indexPath];
+        }
     }
 }
 
 - (void)changeToCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
-    if (offset<0) {
-        [self changeToPreviousCellWithOffset:offset pageWidth:pageWidth];
-    }else{
-        [self changeToNextCellWithOffset:offset pageWidth:pageWidth];
+    if (self.noScrolling||offset<0) return;
+    NSUInteger pasedPages = floor((offset - pageWidth / 2) / pageWidth);
+    NSUInteger currentPage = pasedPages + 1;
+    if (currentPage > self.itemsCount - 1) currentPage = self.itemsCount - 1;
+    
+    CGFloat oldX = currentPage * pageWidth;
+    if (oldX != offset) {
+        BOOL scrollingTowards = (offset > oldX);
+        NSInteger targetIndex = (scrollingTowards) ? currentPage + 1 : currentPage - 1;
+        if (targetIndex >= 0 && targetIndex < self.itemsCount) {
+            PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:[NSIndexPath indexPathForRow:0 inSection:currentPage]];
+            PAScrollableMenuCell* cellSiguiente = [self.visibleCellsMapping objectForKey:[NSIndexPath indexPathForRow:0 inSection:targetIndex]];
+            
+            CGFloat reducidoPrimeraPag = offset-(pageWidth*pasedPages);
+            
+            if (scrollingTowards) {
+                [cellActual setSelectedWithOffset:reducidoPrimeraPag sizeWidth:pageWidth];
+                [cellSiguiente deselectWithOffset:reducidoPrimeraPag sizeWidth:pageWidth];
+            } else {
+                [cellActual setSelectedWithOffset:reducidoPrimeraPag sizeWidth:pageWidth];
+                [cellSiguiente deselectWithOffset:reducidoPrimeraPag sizeWidth:pageWidth];
+            }
+        }
     }
 }
 
-- (void)changeToNextCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
-    PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:_indexPathForSelectedCell];
+- (void)changeToNextCellWithIndexPath:(NSIndexPath*)indexPath offset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
+    PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:indexPath];
     [cellActual deselectWithOffset:offset sizeWidth:pageWidth];
-    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:_indexPathForSelectedCell.row inSection:_indexPathForSelectedCell.section+1];
+    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:_indexPathForSelectedCell.row inSection:indexPath.section+1];
     PAScrollableMenuCell* cellSiguiente = [self.visibleCellsMapping objectForKey:nextIndex];
     [cellSiguiente setSelectedWithOffset:offset sizeWidth:pageWidth];
-    
-    //_indexPathForSelectedCell = nextIndex;
 }
 
 - (void)changeToPreviousCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
     PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:_indexPathForSelectedCell];
-    [cellActual deselectWithOffset:offset sizeWidth:pageWidth];
-    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:_indexPathForSelectedCell.row inSection:_indexPathForSelectedCell.section-1];
-    PAScrollableMenuCell* cellSiguiente = [self.visibleCellsMapping objectForKey:nextIndex];
-    [cellSiguiente setSelectedWithOffset:offset sizeWidth:pageWidth];
-    
-    //_indexPathForSelectedCell = nextIndex;
+    [cellActual setSelectedWithOffset:offset sizeWidth:pageWidth];
+    NSIndexPath *previousIndex = [NSIndexPath indexPathForRow:_indexPathForSelectedCell.row inSection:_indexPathForSelectedCell.section-1];
+    PAScrollableMenuCell* cellAnterior = [self.visibleCellsMapping objectForKey:previousIndex];
+    [cellAnterior deselectWithOffset:offset sizeWidth:pageWidth];
 }
 
 - (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath{
@@ -173,7 +194,7 @@
  com3 = [self componenteColorInicial:blue1 colorFinal:blue2 contenOffset:scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width];
  
  [self.animatableLabel setTextColor:[UIColor colorWithRed:com1 green:com2 blue:com3 alpha:alpha1]];
- [self.animatableLabel setFontSize:[self mateConValorInicial:fontSizeInicial valorFinal:fontSizeInicial+10 contenOffset:self.scrollView.contentOffset.x anchoPagina:scrollView.bounds.size.width]];
+ [self.animatableLabel setFontSize:[self mateConValorInicial:fontSizeInicial valorFinal:fontSizeInicial+10 contenOffset:offset anchoPagina:scrollView.bounds.size.width]];
  */
 
 
@@ -263,6 +284,20 @@
     }
     
     [super layoutSubviews];
+}
+
+- (void)scrollRectToVisibleCenteredOnSelectedIndexCell{
+    ReallyDebug
+    
+    CGFloat originX = (self.cellWidth+self.marginWidth)*_indexPathForSelectedCell.section;
+    
+    CGRect centeredRect = CGRectMake(originX + self.cellWidth/2.f - self.frame.size.width/2.f,
+                                     0,
+                                     self.frame.size.width,
+                                     self.frame.size.height);
+    [UIView animateWithDuration:0.2f delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        [self scrollRectToVisible:centeredRect animated:NO];
+    } completion:nil];
 }
 
 @end

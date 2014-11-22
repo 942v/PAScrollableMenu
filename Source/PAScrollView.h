@@ -34,7 +34,6 @@
 
 - (PAScrollViewPageCell*)dequeueReusablePageCell;
 - (void)reloadData;
-- (void)setIndexPathForCurrentPageCell:(NSIndexPath *)indexPath animated:(BOOL)animated;
 
 @property (nonatomic, assign) IBOutlet id<PAScrollViewDelegate> scrollViewDelegate;
 @property (nonatomic, assign) IBOutlet id<PAScrollViewDataSource> scrollViewDataSource;

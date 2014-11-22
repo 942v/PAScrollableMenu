@@ -66,6 +66,8 @@
     [tapGesture setCancelsTouchesInView:NO];
     
     self.textLabel = [PAAnimatableLabel new];
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     [self.textLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.textLabel setBackgroundColor:[UIColor redColor]];
     [self.textLabel setTextAlignment:NSTextAlignmentCenter];
@@ -74,6 +76,7 @@
     [self.textLabel setText:@"Default"];
     [self.textLabel sizeToFit];
     [self.textLabel setMinimumScaleFactor:.5f];
+    [CATransaction commit];
     [self addSubview:self.textLabel];
     
     [self setFrame:CGRectMake(0, 0, self.textLabel.frame.size.width, 0)];
@@ -137,8 +140,11 @@
     greenF = [PAMath componenteColorInicial:greenO colorFinal:greenS contenOffset:offset anchoPagina:sizeWidth];
     blueF = [PAMath componenteColorInicial:blueO colorFinal:blueS contenOffset:offset anchoPagina:sizeWidth];
 
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     [self.textLabel setTextColor:[UIColor colorWithRed:redF green:greenF blue:blueF alpha:alphaS]];
     [self.textLabel setFontSize:[PAMath pointSizeInicial:self.originalFont.pointSize pointSizeFinal:self.selectedFont.pointSize contenOffset:offset anchoPagina:sizeWidth]];
+    [CATransaction commit];
 }
 
 - (void)deselectWithOffset:(CGFloat)offset sizeWidth:(CGFloat)sizeWidth{
@@ -155,8 +161,11 @@
     greenF = [PAMath componenteColorInicial:greenS colorFinal:greenO contenOffset:offset anchoPagina:sizeWidth];
     blueF = [PAMath componenteColorInicial:blueS colorFinal:blueO contenOffset:offset anchoPagina:sizeWidth];
     
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     [self.textLabel setTextColor:[UIColor colorWithRed:redF green:greenF blue:blueF alpha:alphaS]];
     [self.textLabel setFontSize:[PAMath pointSizeInicial:self.selectedFont.pointSize pointSizeFinal:self.originalFont.pointSize contenOffset:offset anchoPagina:sizeWidth]];
+    [CATransaction commit];
 }
 
 - (void)setSelectedColor:(UIColor *)selectedColor{
@@ -210,10 +219,6 @@
     if (recognizer.state==UIGestureRecognizerStateEnded){
         PAScrollableMenu *scrollableMenu = (PAScrollableMenu*)self.superview.superview;
         scrollableMenu.indexPathForSelectedCell = self.indexPath;
-        
-        if ([scrollableMenu.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:didSelectCellAtIndexPath:)]){
-            [scrollableMenu.scrollableMenuDelegate PAScrollableMenu:scrollableMenu didSelectCellAtIndexPath:self.indexPath];
-        }
     }
 }
 

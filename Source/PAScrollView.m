@@ -102,13 +102,8 @@
 
 - (void)setIndexPathForCurrentPageCell:(NSIndexPath *)indexPath{
     ReallyDebug
-    [self setIndexPathForCurrentPageCell:indexPath animated:YES];
-}
-
-- (void)setIndexPathForCurrentPageCell:(NSIndexPath *)indexPath animated:(BOOL)animated{
-    ReallyDebug
     if (indexPath != _indexPathForCurrentPageCell){
-        [self goToPageWithIndexPath:indexPath animated:animated];
+        [self goToPageWithIndexPath:indexPath animated:NO];
         
         //[[self.visiblePageCellsMapping objectForKey:_indexPathForCurrentPageCell] setSelected:NO animated:animated];
         

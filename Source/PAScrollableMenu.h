@@ -46,6 +46,7 @@
 @property (nonatomic, assign) IBOutlet id<PAScrollableMenuDataSource> scrollableMenuDataSource;
 
 @property (nonatomic, strong) NSIndexPath* indexPathForSelectedCell;
+@property (nonatomic, assign) BOOL noScrolling;
 - (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath;
 - (void)deselectSelectedCellAnimated:(BOOL)animated;
 - (void)changeToCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth;

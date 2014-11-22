@@ -242,9 +242,7 @@
 
 - (void)changes:(void (^)(void))changes{
     [CATransaction begin];
-    //[CATransaction setAnimationDuration:0.f];
-    [CATransaction setDisableActions:YES];
-    //[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     changes();
     [CATransaction commit];
 }
