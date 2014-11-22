@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cpx-n8-oYa" customClass="PAScrollableMenu">
-                                <rect key="frame" x="0.0" y="20" width="600" height="50"/>
-                                <color key="backgroundColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="fGb-81-hL8"/>
+                                    <constraint firstAttribute="height" constant="30" id="fGb-81-hL8"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="scrollableMenuDataSource" destination="BYZ-38-t0r" id="ima-nx-nU6"/>
@@ -29,10 +29,7 @@
                                 </connections>
                             </scrollView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bng-vG-TdS" customClass="PAScrollView">
-                                <rect key="frame" x="0.0" y="472" width="600" height="128"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="XGH-vB-KLX"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="58" width="600" height="542"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="xUT-gg-Okd"/>
                                     <outlet property="scrollViewDataSource" destination="BYZ-38-t0r" id="8g8-ty-kWl"/>
@@ -43,6 +40,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="cpx-n8-oYa" secondAttribute="trailing" id="6Zo-XT-Z7a"/>
+                            <constraint firstItem="bng-vG-TdS" firstAttribute="top" secondItem="cpx-n8-oYa" secondAttribute="bottom" constant="8" id="LZI-R4-zc4"/>
                             <constraint firstItem="bng-vG-TdS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="O3H-Pq-GaV"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="bng-vG-TdS" secondAttribute="bottom" id="TOK-U0-OUL"/>
                             <constraint firstAttribute="trailing" secondItem="bng-vG-TdS" secondAttribute="trailing" id="WxW-ZT-Z96"/>

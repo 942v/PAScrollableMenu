@@ -41,7 +41,7 @@
     [_textLayer setFrame:self.bounds];
     [_textLayer setContentsScale:[[UIScreen mainScreen] scale]];
     [_textLayer setRasterizationScale:[[UIScreen mainScreen] scale]];
-    [_textLayer setBackgroundColor:[[UIColor redColor] CGColor]];
+    [_textLayer setBackgroundColor:[[UIColor clearColor] CGColor]];
     
     // Initialize the default.
     self.textColor = [super textColor];
@@ -242,7 +242,9 @@
 
 - (void)changes:(void (^)(void))changes{
     [CATransaction begin];
-    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    //[CATransaction setAnimationDuration:0.f];
+    [CATransaction setDisableActions:YES];
+    //[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
     changes();
     [CATransaction commit];
 }

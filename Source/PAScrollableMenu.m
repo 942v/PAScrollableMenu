@@ -64,7 +64,7 @@
     self.contentView = [[UIView alloc] initWithFrame:CGRectZero];
     [self.contentView setClipsToBounds:YES];
     //[self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.contentView setBackgroundColor:[UIColor blueColor]];
+    [self.contentView setBackgroundColor:[UIColor clearColor]];
     [self addSubview:self.contentView];
     
     self.visibleCells = [NSMutableSet set];

@@ -58,7 +58,7 @@
 - (void)configure{
     ReallyDebug
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self setBackgroundColor:[UIColor greenColor]];
+    [self setBackgroundColor:[UIColor clearColor]];
     [self setClipsToBounds:YES];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapViewGesture:)];
@@ -69,7 +69,7 @@
     [CATransaction begin];
     [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     [self.textLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.textLabel setBackgroundColor:[UIColor redColor]];
+    [self.textLabel setBackgroundColor:[UIColor clearColor]];
     [self.textLabel setTextAlignment:NSTextAlignmentCenter];
     [self.textLabel setTextColor:[UIColor blackColor]];
     [self.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:14]];
@@ -119,7 +119,7 @@
     };
     
     if (animated){
-        static const NSTimeInterval duration = .7f;
+        static const NSTimeInterval duration = .4f;
         [self.textLabel animateWithDuration:duration animations:changeSelection];
     }else{
         [self.textLabel changes:changeSelection];

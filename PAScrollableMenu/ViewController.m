@@ -77,10 +77,10 @@
     PAScrollableMenuCell* cell = [aScrollableMenu dequeueReusableCell];
     if (!cell){
         cell = [PAScrollableMenuCell cell];
-        
+        [cell setBackgroundColor:[UIColor grayColor]];
         [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
         [cell setSelectedColor:[UIColor yellowColor]];
-        [cell setSelectedFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:50]];
+        [cell setSelectedFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
         [cell finishSetup];
     }
     
@@ -96,7 +96,7 @@
 }
 
 - (CGFloat)marginWidthInPAScrollableMenu:(PAScrollableMenu *)aScrollableMenu{
-    return 4.f;
+    return 1.f;
 }
 
 - (CGFloat)cellWidthInPAScrollableMenu:(PAScrollableMenu *)aScrollableMenu{
@@ -126,11 +126,11 @@
     if (!pageCell){
         pageCell = [PAScrollViewPageCell pageCell];
         
-        //[pageCell.containerView setBackgroundColor:[self randomColor]];
+        [pageCell.containerView setBackgroundColor:[UIColor grayColor]];
         
         UILabel *numberPage = [UILabel new];
         [numberPage setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [numberPage setBackgroundColor:[UIColor redColor]];
+        [numberPage setBackgroundColor:[UIColor clearColor]];
         [numberPage setTextAlignment:NSTextAlignmentCenter];
         [numberPage setTextColor:[UIColor blackColor]];
         [numberPage setFont:[UIFont fontWithName:@"HelveticaNeue" size:14]];

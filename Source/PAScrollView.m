@@ -62,7 +62,7 @@
     self.contentView = [UIView new];
     [self.contentView setClipsToBounds:YES];
     //[self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.contentView setBackgroundColor:[UIColor blueColor]];
+    [self.contentView setBackgroundColor:[UIColor clearColor]];
     [self addSubview:self.contentView];
     
     self.visiblePageCells = [NSMutableSet set];
