@@ -237,14 +237,14 @@
     firstSeenCellIndex = MAX(firstSeenCellIndex, 0);
     
     CGFloat maxX = CGRectGetMaxX(self.bounds);
-    NSUInteger  lastSeenCellIndex = floorf((maxX - (floorf(maxX/(self.cellWidth+self.marginWidth))*self.marginWidth)+self.marginWidth)/self.cellWidth)+1;
+    NSUInteger  lastSeenCellIndex = floorf((maxX - (floorf(maxX/(self.cellWidth+self.marginWidth)) * self.marginWidth)+self.marginWidth)/self.cellWidth)+1;
     lastSeenCellIndex = MIN(lastSeenCellIndex, self.itemsCount);
     
     CGFloat cellHeight = self.bounds.size.height;
     
     for (NSUInteger cellIndex = firstSeenCellIndex; cellIndex<lastSeenCellIndex; ++cellIndex){
         
-        //if (itemIndex >= self.itemsCount) return;
+        if (cellIndex >= self.itemsCount) return;
         
         NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:cellIndex];
         PAScrollableMenuCell* cell = [self.visibleCellsMapping objectForKey:path];

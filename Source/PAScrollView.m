@@ -157,14 +157,14 @@
     firstSeenPageCellIndex = MAX(firstSeenPageCellIndex, 0);
     
     CGFloat maxX = CGRectGetMaxX(self.bounds);
-    NSUInteger  lastSeenPageCellIndex = floorf(maxX - floorf(maxX/self.bounds.size.width)/self.bounds.size.width)+1;
+    NSUInteger  lastSeenPageCellIndex = floorf((maxX - floorf(maxX/self.bounds.size.width))/self.bounds.size.width)+1;
     lastSeenPageCellIndex = MIN(lastSeenPageCellIndex, self.itemsCount);
     
     CGFloat pageCellHeight = self.bounds.size.height;
-    
+
     for (NSUInteger pageCellIndex = firstSeenPageCellIndex; pageCellIndex<lastSeenPageCellIndex; ++pageCellIndex){
         
-        //if (itemIndex >= self.itemsCount) return;
+        if (pageCellIndex >= self.itemsCount) return;
         
         NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:pageCellIndex];
         PAScrollViewPageCell* pageCell = [self.visiblePageCellsMapping objectForKey:path];
@@ -182,8 +182,6 @@
         
         NSDictionary *viewDict2 = @{@"pageCell":pageCell, @"contentView": self.contentView};
         NSDictionary *metrics = @{@"leftMargin":@(pageCellIndex*self.bounds.size.width), @"height":@(pageCellHeight), @"width": @(self.bounds.size.width)};
-        
-        NSLog(@"");
         
         NSMutableArray *pageCellContraintsSave = [NSMutableArray array];
         
