@@ -22,6 +22,7 @@
 		118296451A18647000DABF1B /* PAScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 118296441A18647000DABF1B /* PAScrollView.m */; };
 		118296481A1864A400DABF1B /* PAScrollViewPageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 118296471A1864A400DABF1B /* PAScrollViewPageCell.m */; };
 		11BA0E401A132FFF00FEA38B /* PAScrollableMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */; };
+		11FF4BB01A2449AC004F60E9 /* PAScrollableMenu.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 11FF4BAF1A2449AC004F60E9 /* PAScrollableMenu.podspec */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		118296471A1864A400DABF1B /* PAScrollViewPageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollViewPageCell.m; sourceTree = "<group>"; };
 		11BA0E3E1A132FFF00FEA38B /* PAScrollableMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollableMenuCell.h; sourceTree = "<group>"; };
 		11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollableMenuCell.m; sourceTree = "<group>"; };
+		11FF4BAF1A2449AC004F60E9 /* PAScrollableMenu.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PAScrollableMenu.podspec; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 		116CDAA51A047EBA006F738C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				11FF4BAF1A2449AC004F60E9 /* PAScrollableMenu.podspec */,
 				116CDAA61A047EBA006F738C /* Info.plist */,
 				116CDAA71A047EBA006F738C /* main.m */,
 			);
@@ -256,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				116CDAB11A047EBA006F738C /* Main.storyboard in Resources */,
+				11FF4BB01A2449AC004F60E9 /* PAScrollableMenu.podspec in Resources */,
 				116CDAB61A047EBA006F738C /* LaunchScreen.xib in Resources */,
 				116CDAB31A047EBA006F738C /* Images.xcassets in Resources */,
 			);
