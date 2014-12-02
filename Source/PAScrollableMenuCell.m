@@ -13,7 +13,7 @@
 #define IfDebug Debug==1
 #define ReallyDebug if(IfDebug)NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
 
-#define Debug 0
+#define Debug 1
 
 @interface PAScrollableMenuCell ()
 
@@ -208,8 +208,8 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     ReallyDebug
     PAScrollableMenu *scrollableMenu = (PAScrollableMenu*)self.superview.superview;
-    if ([scrollableMenu.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:willSelectCellAtIndexPath:)]){
-        [scrollableMenu.scrollableMenuDelegate PAScrollableMenu:scrollableMenu willSelectCellAtIndexPath:self.indexPath];
+    if ([scrollableMenu.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:willSelectCellAtIndex:)]){
+        [scrollableMenu.scrollableMenuDelegate PAScrollableMenu:scrollableMenu willSelectCellAtIndex:self.index];
     }
 }
 
@@ -218,7 +218,7 @@
     
     if (recognizer.state==UIGestureRecognizerStateEnded){
         PAScrollableMenu *scrollableMenu = (PAScrollableMenu*)self.superview.superview;
-        scrollableMenu.indexPathForSelectedCell = self.indexPath;
+        scrollableMenu.indexForSelectedCell = self.index;
     }
 }
 

@@ -54,8 +54,8 @@
     [self.scrollableMenuView reloadData];
     [self.scrollView reloadData];
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:2];
-    [self.scrollableMenuView setIndexPathForSelectedCell:indexPath];
+    NSInteger index = 2;
+    [self.scrollableMenuView setIndexForSelectedCell:index];
 }
 
 - (UIColor *)randomColor{
@@ -69,22 +69,21 @@
 
 - (NSUInteger)numberOfItemsInPAScrollableMenu:(PAScrollableMenu *)aScrollableMenu{
     ReallyDebug
+    
     return self.items.count;
 }
 
-- (PAScrollableMenuCell *)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu cellAtIndexPath:(NSIndexPath *)indexPath{
+- (PAScrollableMenuCell *)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu cellAtIndex:(NSInteger)index{
     ReallyDebug
-    PAScrollableMenuCell* cell = [aScrollableMenu dequeueReusableCell];
-    if (!cell){
-        cell = [PAScrollableMenuCell cell];
+    
+    PAScrollableMenuCell* cell = [aScrollableMenu newCell];
         [cell setBackgroundColor:[UIColor grayColor]];
         [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
         [cell setSelectedColor:[UIColor yellowColor]];
         [cell setSelectedFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
         [cell finishSetup];
-    }
     
-    NSString* itemName = [self.items objectAtIndex:indexPath.section];
+    NSString* itemName = [self.items objectAtIndex:index];
     [cell.textLabel setText:itemName];
     [cell.textLabel sizeToFit];
     
@@ -105,11 +104,12 @@
 
 #pragma mark - PAScrollableMenu Delegate
 
-- (void)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu didSelectCellAtIndexPath:(NSIndexPath *)indexPath{
+- (void)PAScrollableMenu:(PAScrollableMenu *)aScrollableMenu didSelectCellAtIndex:(NSInteger)index{
     ReallyDebug
-    NSLog(@"Seleccionar: %li", (long)[aScrollableMenu indexForIndexPath:indexPath]);
+    
+    NSLog(@"Seleccionar: %li", (long)index);
     [self.scrollableMenuView setNoScrolling:YES];
-    [self.scrollView setIndexPathForCurrentPageCell:indexPath];
+    [self.scrollView setIndexPathForCurrentPageCell:[NSIndexPath indexPathForRow:0 inSection:index]];
     [self.scrollableMenuView setNoScrolling:NO];
 }
 
@@ -117,11 +117,13 @@
 
 - (NSUInteger)numberOfPagesInPAScrollView:(PAScrollView *)aScrollView{
     ReallyDebug
+    
     return self.items.count;
 }
 
 - (PAScrollViewPageCell *)PAScrollView:(PAScrollView *)aScrollView pageCellAtIndexPath:(NSIndexPath *)indexPath{
     ReallyDebug
+    
     PAScrollViewPageCell* pageCell = [aScrollView dequeueReusablePageCell];
     if (!pageCell){
         pageCell = [PAScrollViewPageCell pageCell];
@@ -158,15 +160,17 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration{
     ReallyDebug
+    
     [self.scrollableMenuView reloadData];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     ReallyDebug
+    
     if (scrollView==self.scrollView) {
         CGFloat pageWidth = scrollView.frame.size.width;
-        int currentPage = floor((scrollView.contentOffset.x - pageWidth/2)/pageWidth)+1;
-        [self.scrollableMenuView setIndexPathForSelectedCell:[NSIndexPath indexPathForRow:0 inSection:currentPage] animated:YES];
+        NSInteger currentPage = floor((scrollView.contentOffset.x - pageWidth/2)/pageWidth)+1;
+        [self.scrollableMenuView setIndexForSelectedCell:currentPage animated:YES];
     }
 }
 

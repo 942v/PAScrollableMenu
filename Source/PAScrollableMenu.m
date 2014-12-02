@@ -18,10 +18,7 @@
 @property (nonatomic, strong) UIView *contentView;
 
 @property (nonatomic, assign) NSUInteger itemsCount;
-@property (nonatomic, strong) NSMutableSet* visibleCells;
-@property (nonatomic, strong) NSMutableDictionary* visibleCellsMapping;
-@property (nonatomic, strong) NSMutableDictionary* visibleCellsConstraints;
-@property (nonatomic, strong) NSMutableSet* recyclePool;
+@property (nonatomic, strong) NSMutableArray *dataPool;
 @property (nonatomic, assign) CGFloat marginWidth;
 @property (nonatomic, assign) CGFloat cellWidth;
 
@@ -67,10 +64,7 @@
     [self.contentView setBackgroundColor:[UIColor clearColor]];
     [self addSubview:self.contentView];
     
-    self.visibleCells = [NSMutableSet set];
-    self.visibleCellsMapping = [NSMutableDictionary dictionary];
-    self.visibleCellsConstraints = [NSMutableDictionary dictionary];
-    self.recyclePool = [NSMutableSet set];
+    self.dataPool = [NSMutableArray array];
     self.marginWidth = 0.f;
 }
 
@@ -98,12 +92,41 @@
         .origin = CGPointZero
     }];
 
-    for(PAScrollableMenuCell* cell in self.visibleCells){
-        [self.recyclePool addObject:cell];
+    for (PAScrollableMenuCell *cell in self.dataPool) {
         [cell removeFromSuperview];
     }
-    [self.visibleCells removeAllObjects];
-    [self.visibleCellsMapping removeAllObjects];
+    
+    [self.dataPool removeAllObjects];
+    
+    for (NSUInteger cellIndex = 0; cellIndex<self.itemsCount; ++cellIndex) {
+        PAScrollableMenuCell* cell = [self.scrollableMenuDataSource PAScrollableMenu:self cellAtIndex:cellIndex];
+        cell.index = cellIndex;
+        if (self.indexForSelectedCell){
+            BOOL seleccionala = self.indexForSelectedCell==cellIndex;
+            if (seleccionala!=cell.selected)cell.selected = seleccionala;
+        }else{
+            if (cell.selected)cell.selected = NO;
+        }
+        
+        [self.contentView insertSubview:cell atIndex:self.dataPool.count];
+        
+        CGFloat cellHeight = self.bounds.size.height;
+        
+        NSDictionary *viewDict2 = @{@"cell":cell, @"contentView": self.contentView};
+        NSDictionary *metrics = @{@"leftMargin":@(cellIndex*(self.cellWidth+self.marginWidth)), @"height":@(cellHeight), @"width": @(self.cellWidth)};
+        
+        NSMutableArray *cellContraintsSave = [NSMutableArray array];
+        
+        [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-leftMargin-[cell(width)]" options:0 metrics:metrics views:viewDict2]];
+        [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cell(height)]|" options:0 metrics:metrics views:viewDict2]];
+        [self.contentView addConstraints:cellContraintsSave];
+        
+        [self.dataPool addObject:cell];
+        
+        if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:willDisplayCell:forIndex:)]){
+            [self.scrollableMenuDelegate PAScrollableMenu:self willDisplayCell:cell forIndex:cellIndex];
+        }
+    }
 
     [self setNeedsLayout];
     
@@ -111,27 +134,27 @@
 
 - (void)deselectSelectedCellAnimated:(BOOL)animated{
     ReallyDebug
-    [self setIndexPathForSelectedCell:nil animated:animated];
+    [self setIndexForSelectedCell:-1 animated:animated];
 }
 
-- (void)setIndexPathForSelectedCell:(NSIndexPath *)indexPath{
+- (void)setIndexForSelectedCell:(NSInteger)index{
     ReallyDebug
-    [self setIndexPathForSelectedCell:indexPath animated:YES];
+    [self setIndexForSelectedCell:index animated:YES];
 }
 
-- (void)setIndexPathForSelectedCell:(NSIndexPath *)indexPath animated:(BOOL)animated{
+- (void)setIndexForSelectedCell:(NSInteger)index animated:(BOOL)animated{
     ReallyDebug
-    if (indexPath != _indexPathForSelectedCell){
-        [[self.visibleCellsMapping objectForKey:_indexPathForSelectedCell] setSelected:NO animated:animated];
+    if (index != _indexForSelectedCell){
+        if (index>=0)[[self.dataPool objectAtIndex:_indexForSelectedCell] setSelected:NO animated:animated];
         
-        _indexPathForSelectedCell = indexPath;
+        _indexForSelectedCell = index;
 
-        [[self.visibleCellsMapping objectForKey:_indexPathForSelectedCell] setSelected:YES animated:animated];
+        if (index>=0)[[self.dataPool objectAtIndex:_indexForSelectedCell] setSelected:YES animated:animated];
         
         [self scrollRectToVisibleCenteredOnSelectedIndexCell];
         
-        if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:didSelectCellAtIndexPath:)]){
-            [self.scrollableMenuDelegate PAScrollableMenu:self didSelectCellAtIndexPath:indexPath];
+        if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:didSelectCellAtIndex:)]){
+            [self.scrollableMenuDelegate PAScrollableMenu:self didSelectCellAtIndex:index];
         }
     }
 }
@@ -147,8 +170,8 @@
         BOOL scrollingTowards = (offset > oldX);
         NSInteger targetIndex = (scrollingTowards) ? currentPage + 1 : currentPage - 1;
         if (targetIndex >= 0 && targetIndex < self.itemsCount) {
-            PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:[NSIndexPath indexPathForRow:0 inSection:currentPage]];
-            PAScrollableMenuCell* cellSiguiente = [self.visibleCellsMapping objectForKey:[NSIndexPath indexPathForRow:0 inSection:targetIndex]];
+            PAScrollableMenuCell* cellActual = [self.dataPool objectAtIndex:currentPage];
+            PAScrollableMenuCell* cellSiguiente = [self.dataPool objectAtIndex:targetIndex];
             
             CGFloat reducidoPrimeraPag = offset-(pageWidth*pasedPages);
             
@@ -163,28 +186,28 @@
     }
 }
 
-- (void)changeToNextCellWithIndexPath:(NSIndexPath*)indexPath offset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
-    PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:indexPath];
+- (void)changeToNextCellWithIndex:(NSInteger)index offset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
+    PAScrollableMenuCell* cellActual = [self.dataPool objectAtIndex:index];
     [cellActual deselectWithOffset:offset sizeWidth:pageWidth];
-    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:_indexPathForSelectedCell.row inSection:indexPath.section+1];
-    PAScrollableMenuCell* cellSiguiente = [self.visibleCellsMapping objectForKey:nextIndex];
+    NSInteger nextIndex = index+1;
+    PAScrollableMenuCell* cellSiguiente = [self.dataPool objectAtIndex:nextIndex];
     [cellSiguiente setSelectedWithOffset:offset sizeWidth:pageWidth];
 }
 
 - (void)changeToPreviousCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth{
-    PAScrollableMenuCell* cellActual = [self.visibleCellsMapping objectForKey:_indexPathForSelectedCell];
+    PAScrollableMenuCell* cellActual = [self.dataPool objectAtIndex:_indexForSelectedCell];
     [cellActual setSelectedWithOffset:offset sizeWidth:pageWidth];
-    NSIndexPath *previousIndex = [NSIndexPath indexPathForRow:_indexPathForSelectedCell.row inSection:_indexPathForSelectedCell.section-1];
-    PAScrollableMenuCell* cellAnterior = [self.visibleCellsMapping objectForKey:previousIndex];
+    NSInteger previousIndex = _indexForSelectedCell-1;
+    PAScrollableMenuCell* cellAnterior = [self.dataPool objectAtIndex:previousIndex];
     [cellAnterior deselectWithOffset:offset sizeWidth:pageWidth];
 }
 
-- (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath{
+- (PAScrollableMenuCell*)newCell{
     ReallyDebug
-    return indexPath ? (indexPath.section + indexPath.row * self.itemsCount) : -1;
+    PAScrollableMenuCell* cell = [PAScrollableMenuCell cell];
+    cell.selected = NO;
+    return cell;
 }
-
-
 
 /*
  static CGFloat com1, com2, com3;
@@ -198,32 +221,20 @@
  */
 
 
-
-- (PAScrollableMenuCell*)dequeueReusableCell{
-    ReallyDebug
-    PAScrollableMenuCell* cell = [self.recyclePool anyObject];
-    if (cell){
-        [self.recyclePool removeObject:cell];
-        
-        cell.selected = NO;
-    }
-    return cell;
-}
-
 - (void)layoutSubviews{
     ReallyDebug
     // Remove cells that are no longer visible an cached them
-    for(PAScrollableMenuCell* cell in self.visibleCells){
+    /*for(PAScrollableMenuCell* cell in self.visibleCells){
         if (!CGRectIntersectsRect(cell.frame, self.bounds)){
             [self.recyclePool addObject:cell];
-            [self.visibleCellsMapping removeObjectForKey:cell.indexPath];
-            [self.visibleCellsConstraints removeObjectForKey:cell.indexPath];
+            [self.visibleCellsMapping removeObjectForKey:cell.index];
+            [self.visibleCellsConstraints removeObjectForKey:cell.index];
             [cell removeFromSuperview];
         }
     }
     [self.visibleCells minusSet:self.recyclePool];
     
-    if (self.itemsCount == 0) return;
+    if (self.itemsCount == 0) return;*/
     
     // !!!: ESTA ES LA WAA Q JODE
     /*NSUInteger firstSeenCellIndex = floorf( CGRectGetMinX(self.bounds) / self.cellWidth );
@@ -232,7 +243,7 @@
     NSUInteger lastSeenCellIndex = floorf( (CGRectGetMaxX(self.bounds)-1) / self.cellWidth ) + 1;
     lastSeenCellIndex = MIN(lastColumn, self.itemsCount);*/
     
-    CGFloat minX = CGRectGetMinX(self.bounds);
+    /*CGFloat minX = CGRectGetMinX(self.bounds);
     NSUInteger firstSeenCellIndex = floorf((minX - (floorf(minX/(self.cellWidth+self.marginWidth)) * self.marginWidth))/self.cellWidth);
     firstSeenCellIndex = MAX(firstSeenCellIndex, 0);
     
@@ -246,14 +257,14 @@
         
         if (cellIndex >= self.itemsCount) return;
         
-        NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:cellIndex];
+        NSInteger path = [NSindex indexForRow:0 inSection:cellIndex];
         PAScrollableMenuCell* cell = [self.visibleCellsMapping objectForKey:path];
         if (!cell){
-            cell = [self.scrollableMenuDataSource PAScrollableMenu:self cellAtIndexPath:path];
-            cell.indexPath = path;
+            cell = [self.scrollableMenuDataSource PAScrollableMenu:self cellAtindex:path];
+            cell.index = path;
 
-            if (self.indexPathForSelectedCell){
-                BOOL seleccionala = [self.indexPathForSelectedCell compare:path]==NSOrderedSame;
+            if (self.indexForSelectedCell){
+                BOOL seleccionala = [self.indexForSelectedCell compare:path]==NSOrderedSame;
                 if (seleccionala!=cell.selected)cell.selected = seleccionala;
             }else{
                 if (cell.selected)cell.selected = NO;
@@ -278,10 +289,10 @@
         
         [self.visibleCellsConstraints setObject:cellContraintsSave forKey:path];
 
-        if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:willDisplayCell:forIndexPath:)]){
-            [self.scrollableMenuDelegate PAScrollableMenu:self willDisplayCell:cell forIndexPath:path];
+        if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:willDisplayCell:forindex:)]){
+            [self.scrollableMenuDelegate PAScrollableMenu:self willDisplayCell:cell forindex:path];
         }
-    }
+    }*/
     
     [super layoutSubviews];
 }
@@ -289,7 +300,7 @@
 - (void)scrollRectToVisibleCenteredOnSelectedIndexCell{
     ReallyDebug
     
-    CGFloat originX = (self.cellWidth+self.marginWidth)*_indexPathForSelectedCell.section;
+    CGFloat originX = (self.cellWidth+self.marginWidth)*_indexForSelectedCell;
     
     CGRect centeredRect = CGRectMake(originX + self.cellWidth/2.f - self.frame.size.width/2.f,
                                      0,

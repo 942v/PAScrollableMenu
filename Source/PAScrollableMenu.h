@@ -17,7 +17,7 @@
 
 @required
 - (NSUInteger)numberOfItemsInPAScrollableMenu:(PAScrollableMenu*)aScrollableMenu;
-- (PAScrollableMenuCell*)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu cellAtIndexPath:(NSIndexPath*)indexPath;
+- (PAScrollableMenuCell*)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu cellAtIndex:(NSInteger)index;
 - (CGFloat)cellWidthInPAScrollableMenu:(PAScrollableMenu*)aScrollableMenu;
 
 @optional
@@ -28,9 +28,9 @@
 @protocol PAScrollableMenuDelegate <NSObject>
 
 @optional
-- (void)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu willDisplayCell:(PAScrollableMenuCell*)aCell forIndexPath:(NSIndexPath*)indexPath;
-- (void)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu willSelectCellAtIndexPath:(NSIndexPath*)indexPath;
-- (void)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu didSelectCellAtIndexPath:(NSIndexPath*)indexPath;
+- (void)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu willDisplayCell:(PAScrollableMenuCell*)aCell forIndex:(NSInteger)index;
+- (void)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu willSelectCellAtIndex:(NSInteger)index;
+- (void)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu didSelectCellAtIndex:(NSInteger)index;
 
 @end
 
@@ -38,17 +38,17 @@
 
 @interface PAScrollableMenu : UIScrollView
 
-- (PAScrollableMenuCell*)dequeueReusableCell;
 - (void)reloadData;
-- (void)setIndexPathForSelectedCell:(NSIndexPath *)indexPath animated:(BOOL)animated;
+- (void)setIndexForSelectedCell:(NSInteger)index animated:(BOOL)animated;
 
 @property (nonatomic, assign) IBOutlet id<PAScrollableMenuDelegate> scrollableMenuDelegate;
 @property (nonatomic, assign) IBOutlet id<PAScrollableMenuDataSource> scrollableMenuDataSource;
 
-@property (nonatomic, strong) NSIndexPath* indexPathForSelectedCell;
+@property (nonatomic, assign) NSInteger indexForSelectedCell;
 @property (nonatomic, assign) BOOL noScrolling;
-- (NSInteger)indexForIndexPath:(NSIndexPath*)indexPath;
 - (void)deselectSelectedCellAnimated:(BOOL)animated;
 - (void)changeToCellWithOffset:(CGFloat)offset pageWidth:(CGFloat)pageWidth;
+
+- (PAScrollableMenuCell*)newCell;
 
 @end

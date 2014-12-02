@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) IBOutlet PAAnimatableLabel *textLabel;
 
-@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic, assign) NSInteger index;
 
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 @property (nonatomic, strong) UIColor *selectedColor;
