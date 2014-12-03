@@ -109,7 +109,7 @@
         NSLog(@"Size: %f", cell.textLabel.textSize.width);
         
         NSDictionary *viewDict2 = @{@"cell":cell, @"contentView": self.contentView};
-        NSDictionary *metrics = @{@"leftMargin":@(lastCellMaxX+(lastCellMaxX!=0?self.marginWidth:0)), @"height":@(cellHeight), @"width": @(cell.textLabel.textSize.width+4+(5*labs(cell.selectedFont.pointSize-cell.textLabel.fontSize)))};
+        NSDictionary *metrics = @{@"leftMargin":@(lastCellMaxX+(lastCellMaxX!=0?self.marginWidth:0)), @"height":@(cellHeight), @"width": @(cell.textLabel.textSize.width+4+(10*labs(cell.selectedFont.pointSize-cell.textLabel.fontSize)))};
         
         NSMutableArray *cellContraintsSave = [NSMutableArray array];
         
@@ -117,7 +117,7 @@
         [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cell(height)]|" options:0 metrics:metrics views:viewDict2]];
         [self.contentView addConstraints:cellContraintsSave];
         
-        [cell setFrame:CGRectMake(lastCellMaxX+(lastCellMaxX!=0?self.marginWidth:0), 0, cell.textLabel.textSize.width+4+(5*labs(cell.selectedFont.pointSize-cell.textLabel.fontSize)), cellHeight)];
+        [cell setFrame:CGRectMake(lastCellMaxX+(lastCellMaxX!=0?self.marginWidth:0), 0, cell.textLabel.textSize.width+4+(10*labs(cell.selectedFont.pointSize-cell.textLabel.fontSize)), cellHeight)];
         
         [self.dataPool addObject:cell];
         
