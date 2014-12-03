@@ -106,7 +106,6 @@
         [self.contentView insertSubview:cell atIndex:self.dataPool.count];
         
         CGFloat cellHeight = self.bounds.size.height;
-        NSLog(@"Size: %f", cell.textLabel.textSize.width);
         
         NSDictionary *viewDict2 = @{@"cell":cell, @"contentView": self.contentView};
         NSDictionary *metrics = @{@"leftMargin":@(lastCellMaxX+(lastCellMaxX!=0?self.marginWidth:0)), @"height":@(cellHeight), @"width": @(cell.textLabel.textSize.width+4+(10*labs(cell.selectedFont.pointSize-cell.textLabel.fontSize)))};
