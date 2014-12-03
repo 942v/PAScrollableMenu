@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "PAScrollableMenu"
-  s.version      = "1.2"
+  s.version      = "1.2.1"
   s.summary      = "My implementation of the menu on the chinese news app."
 
   s.homepage     = "https://github.com/942v/PAScrollableMenu"
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
 
   s.platform     = :ios, "6.0"
 
-  s.source       = { :git => "https://github.com/942v/PAScrollableMenu.git", :tag => "v1.2" }
+  s.source       = { :git => "https://github.com/942v/PAScrollableMenu.git", :tag => "v1.2.1" }
 
   s.source_files  = "Source", "Source/**/*.{h,m}"
 
