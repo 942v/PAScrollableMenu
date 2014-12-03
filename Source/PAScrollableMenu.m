@@ -20,7 +20,6 @@
 @property (nonatomic, assign) NSUInteger itemsCount;
 @property (nonatomic, strong) NSMutableArray *dataPool;
 @property (nonatomic, assign) CGFloat marginWidth;
-@property (nonatomic, assign) CGFloat cellWidth;
 
 @end
 
@@ -78,19 +77,12 @@
     ReallyDebug
     
     [self setItemsCount:[self.scrollableMenuDataSource numberOfItemsInPAScrollableMenu:self]];
-    [self setCellWidth:[self.scrollableMenuDataSource cellWidthInPAScrollableMenu:self]];
     
     if ([self.scrollableMenuDataSource respondsToSelector:@selector(marginWidthInPAScrollableMenu:)]) {
         [self setMarginWidth:[self.scrollableMenuDataSource marginWidthInPAScrollableMenu:self]];
     }
     
     [self.contentView removeConstraints:self.contentView.constraints];
-    
-    self.contentSize = CGSizeMake((self.cellWidth*self.itemsCount)+((self.itemsCount-1)*self.marginWidth), self.bounds.size.height);
-    [self.contentView setFrame:(CGRect){
-        .size = self.contentSize,
-        .origin = CGPointZero
-    }];
 
     for (PAScrollableMenuCell *cell in self.dataPool) {
         [cell removeFromSuperview];
@@ -98,9 +90,12 @@
     
     [self.dataPool removeAllObjects];
     
+    CGFloat lastCellMaxX = 0;
+    
     for (NSUInteger cellIndex = 0; cellIndex<self.itemsCount; ++cellIndex) {
         PAScrollableMenuCell* cell = [self.scrollableMenuDataSource PAScrollableMenu:self cellAtIndex:cellIndex];
         cell.index = cellIndex;
+        
         if (self.indexForSelectedCell){
             BOOL seleccionala = self.indexForSelectedCell==cellIndex;
             if (seleccionala!=cell.selected)cell.selected = seleccionala;
@@ -111,9 +106,10 @@
         [self.contentView insertSubview:cell atIndex:self.dataPool.count];
         
         CGFloat cellHeight = self.bounds.size.height;
+        NSLog(@"Size: %f", cell.textLabel.textSize.width);
         
         NSDictionary *viewDict2 = @{@"cell":cell, @"contentView": self.contentView};
-        NSDictionary *metrics = @{@"leftMargin":@(cellIndex*(self.cellWidth+self.marginWidth)), @"height":@(cellHeight), @"width": @(self.cellWidth)};
+        NSDictionary *metrics = @{@"leftMargin":@(lastCellMaxX+(lastCellMaxX!=0?self.marginWidth:0)), @"height":@(cellHeight), @"width": @(cell.textLabel.textSize.width+4+(5*labs(cell.selectedFont.pointSize-cell.textLabel.fontSize)))};
         
         NSMutableArray *cellContraintsSave = [NSMutableArray array];
         
@@ -121,10 +117,22 @@
         [cellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cell(height)]|" options:0 metrics:metrics views:viewDict2]];
         [self.contentView addConstraints:cellContraintsSave];
         
+        [cell setFrame:CGRectMake(lastCellMaxX+(lastCellMaxX!=0?self.marginWidth:0), 0, cell.textLabel.textSize.width+4+(5*labs(cell.selectedFont.pointSize-cell.textLabel.fontSize)), cellHeight)];
+        
         [self.dataPool addObject:cell];
+        
+        lastCellMaxX = CGRectGetMaxX(cell.frame);
         
         if ([self.scrollableMenuDelegate respondsToSelector:@selector(PAScrollableMenu:willDisplayCell:forIndex:)]){
             [self.scrollableMenuDelegate PAScrollableMenu:self willDisplayCell:cell forIndex:cellIndex];
+        }
+        
+        if (cellIndex==self.itemsCount-1) {
+            self.contentSize = CGSizeMake(CGRectGetMaxX(cell.frame), self.bounds.size.height);
+            [self.contentView setFrame:(CGRect){
+                .size = self.contentSize,
+                .origin = CGPointZero
+            }];
         }
     }
 
@@ -300,9 +308,10 @@
 - (void)scrollRectToVisibleCenteredOnSelectedIndexCell{
     ReallyDebug
     
-    CGFloat originX = (self.cellWidth+self.marginWidth)*_indexForSelectedCell;
+    PAScrollableMenuCell *cell = [self.dataPool objectAtIndex:_indexForSelectedCell];
+    CGFloat originX = CGRectGetMinX(cell.frame);
     
-    CGRect centeredRect = CGRectMake(originX + self.cellWidth/2.f - self.frame.size.width/2.f,
+    CGRect centeredRect = CGRectMake(originX + cell.frame.size.width/2.f - self.frame.size.width/2.f,
                                      0,
                                      self.frame.size.width,
                                      self.frame.size.height);

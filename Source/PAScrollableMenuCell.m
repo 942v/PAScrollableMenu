@@ -13,7 +13,7 @@
 #define IfDebug Debug==1
 #define ReallyDebug if(IfDebug)NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
 
-#define Debug 1
+#define Debug 0
 
 @interface PAScrollableMenuCell ()
 

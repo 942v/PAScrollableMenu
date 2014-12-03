@@ -18,7 +18,6 @@
 @required
 - (NSUInteger)numberOfItemsInPAScrollableMenu:(PAScrollableMenu*)aScrollableMenu;
 - (PAScrollableMenuCell*)PAScrollableMenu:(PAScrollableMenu*)aScrollableMenu cellAtIndex:(NSInteger)index;
-- (CGFloat)cellWidthInPAScrollableMenu:(PAScrollableMenu*)aScrollableMenu;
 
 @optional
 - (CGFloat)marginWidthInPAScrollableMenu:(PAScrollableMenu*)aScrollableMenu;

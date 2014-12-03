@@ -77,11 +77,11 @@
     ReallyDebug
     
     PAScrollableMenuCell* cell = [aScrollableMenu newCell];
-        [cell setBackgroundColor:[UIColor grayColor]];
-        [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
-        [cell setSelectedColor:[UIColor yellowColor]];
-        [cell setSelectedFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
-        [cell finishSetup];
+    [cell setBackgroundColor:[UIColor grayColor]];
+    [cell.textLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:14]];
+    [cell setSelectedColor:[UIColor yellowColor]];
+    [cell setSelectedFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:16]];
+    [cell finishSetup];
     
     NSString* itemName = [self.items objectAtIndex:index];
     [cell.textLabel setText:itemName];

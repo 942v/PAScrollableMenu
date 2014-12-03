@@ -186,6 +186,12 @@
     [self setNeedsLayout];
 }
 
+- (CGSize)textSize{
+    NSDictionary *userAttributes = @{NSFontAttributeName:self.font};
+
+    return [self.text sizeWithAttributes:userAttributes];
+}
+
 - (void)layoutSubviews{
     [super layoutSubviews];
     
