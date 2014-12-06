@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		113829051A16E244004B6C43 /* PAMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 113829041A16E244004B6C43 /* PAMath.m */; };
+		114DE7281A32990A009BC377 /* PAScrollViewNamePageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 114DE7271A32990A009BC377 /* PAScrollViewNamePageCell.m */; };
 		1159D44A1A147EA7003BCE38 /* PAAnimatableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1159D4491A147EA7003BCE38 /* PAAnimatableLabel.m */; };
 		1159D4501A148145003BCE38 /* UIFont+CoreTextExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1159D44E1A148145003BCE38 /* UIFont+CoreTextExtensions.m */; };
 		1159D4521A148385003BCE38 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1159D4511A148385003BCE38 /* QuartzCore.framework */; };
@@ -37,6 +38,8 @@
 /* Begin PBXFileReference section */
 		113829031A16E244004B6C43 /* PAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAMath.h; sourceTree = "<group>"; };
 		113829041A16E244004B6C43 /* PAMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAMath.m; sourceTree = "<group>"; };
+		114DE7261A32990A009BC377 /* PAScrollViewNamePageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAScrollViewNamePageCell.h; sourceTree = "<group>"; };
+		114DE7271A32990A009BC377 /* PAScrollViewNamePageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAScrollViewNamePageCell.m; sourceTree = "<group>"; };
 		1159D4481A147EA7003BCE38 /* PAAnimatableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAAnimatableLabel.h; sourceTree = "<group>"; };
 		1159D4491A147EA7003BCE38 /* PAAnimatableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAAnimatableLabel.m; sourceTree = "<group>"; };
 		1159D44D1A148145003BCE38 /* UIFont+CoreTextExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+CoreTextExtensions.h"; sourceTree = "<group>"; };
@@ -166,6 +169,8 @@
 				116CDACD1A048113006F738C /* PAScrollableMenu.m */,
 				11BA0E3E1A132FFF00FEA38B /* PAScrollableMenuCell.h */,
 				11BA0E3F1A132FFF00FEA38B /* PAScrollableMenuCell.m */,
+				114DE7261A32990A009BC377 /* PAScrollViewNamePageCell.h */,
+				114DE7271A32990A009BC377 /* PAScrollViewNamePageCell.m */,
 				118296431A18647000DABF1B /* PAScrollView.h */,
 				118296441A18647000DABF1B /* PAScrollView.m */,
 				118296461A1864A400DABF1B /* PAScrollViewPageCell.h */,
@@ -283,6 +288,7 @@
 				118296481A1864A400DABF1B /* PAScrollViewPageCell.m in Sources */,
 				11BA0E401A132FFF00FEA38B /* PAScrollableMenuCell.m in Sources */,
 				116CDAA81A047EBA006F738C /* main.m in Sources */,
+				114DE7281A32990A009BC377 /* PAScrollViewNamePageCell.m in Sources */,
 				113829051A16E244004B6C43 /* PAMath.m in Sources */,
 				1159D44A1A147EA7003BCE38 /* PAAnimatableLabel.m in Sources */,
 			);

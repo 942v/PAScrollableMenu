@@ -143,7 +143,7 @@
         NSDictionary *viewDict =@{@"label":numberPage};
         NSDictionary *metrics = @{@"margin":@0};
         
-        [pageCell.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[label]|" options:NSLayoutFormatAlignAllCenterX metrics:metrics views:viewDict]];
+        [pageCell.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-40-[label]|" options:NSLayoutFormatAlignAllCenterX metrics:metrics views:viewDict]];
         [pageCell.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=margin)-[label]-(>=margin)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:viewDict]];
         [pageCell.containerView addConstraint:[NSLayoutConstraint constraintWithItem:numberPage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:pageCell.containerView attribute:NSLayoutAttributeCenterX multiplier:1.f constant:0.f]];
         [pageCell.containerView addConstraint:[NSLayoutConstraint constraintWithItem:numberPage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:pageCell.containerView attribute:NSLayoutAttributeCenterY multiplier:1.f constant:0.f]];
@@ -154,6 +154,21 @@
     [label setText:[NSString stringWithFormat:@"Pagina: %li", (long)[aScrollView indexForIndexPath:indexPath]]];
     
     return pageCell;
+}
+
+- (id)PAScrollView:(PAScrollView *)aScrollView namePageCellAtIndexPath:(NSIndexPath *)indexPath{
+    ReallyDebug
+    
+    PAScrollViewNamePageCell* namePageCell = [aScrollView dequeueReusableNamePageCell];
+    if (!namePageCell){
+        namePageCell = [PAScrollViewNamePageCell namePageCell];
+        
+        [namePageCell setBackgroundColor:[UIColor grayColor]];
+    }
+    
+    [namePageCell.labelView setText:[NSString stringWithFormat:@"PaginaAtras: %li", (long)[aScrollView indexForIndexPath:indexPath]]];
+    
+    return namePageCell;
 }
 
 #pragma mark - Rotation Notification
