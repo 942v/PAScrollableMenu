@@ -128,7 +128,7 @@
     if (!pageCell){
         pageCell = [PAScrollViewPageCell pageCell];
         
-        [pageCell.containerView setBackgroundColor:[UIColor grayColor]];
+        [pageCell.containerView setBackgroundColor:[UIColor clearColor]];
         
         UILabel *numberPage = [UILabel new];
         [numberPage setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -143,7 +143,7 @@
         NSDictionary *viewDict =@{@"label":numberPage};
         NSDictionary *metrics = @{@"margin":@0};
         
-        [pageCell.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-40-[label]|" options:NSLayoutFormatAlignAllCenterX metrics:metrics views:viewDict]];
+        [pageCell.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[label]|" options:NSLayoutFormatAlignAllCenterX metrics:metrics views:viewDict]];
         [pageCell.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=margin)-[label]-(>=margin)-|" options:NSLayoutFormatAlignAllCenterY metrics:metrics views:viewDict]];
         [pageCell.containerView addConstraint:[NSLayoutConstraint constraintWithItem:numberPage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:pageCell.containerView attribute:NSLayoutAttributeCenterX multiplier:1.f constant:0.f]];
         [pageCell.containerView addConstraint:[NSLayoutConstraint constraintWithItem:numberPage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:pageCell.containerView attribute:NSLayoutAttributeCenterY multiplier:1.f constant:0.f]];

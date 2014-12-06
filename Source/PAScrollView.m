@@ -17,7 +17,8 @@
     __weak id<UIScrollViewDelegate> _myDelegate;  // the delegate that other calling classes will set.
 }
 
-@property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIView *contentViewPageCells;
+@property (nonatomic, strong) UIView *contentViewNamePageCells;
 
 @property (nonatomic, assign) NSUInteger itemsCount;
 @property (nonatomic, strong) NSMutableSet* visiblePageCells;
@@ -67,21 +68,27 @@
     [self setPagingEnabled:YES];
     [self setDelegate:self];
     
-    self.contentView = [UIView new];
-    [self.contentView setClipsToBounds:YES];
+    self.contentViewNamePageCells = [UIView new];
+    [self.contentViewNamePageCells setClipsToBounds:YES];
     //[self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.contentView setBackgroundColor:[UIColor clearColor]];
-    [self addSubview:self.contentView];
+    [self.contentViewNamePageCells setBackgroundColor:[UIColor clearColor]];
+    [self addSubview:self.contentViewNamePageCells];
     
-    self.visiblePageCells = [NSMutableSet set];
-    self.visiblePageCellsMapping = [NSMutableDictionary dictionary];
-    self.visiblePageCellsConstraints = [NSMutableDictionary dictionary];
-    self.recyclePoolPageCells = [NSMutableSet set];
+    self.contentViewPageCells = [UIView new];
+    [self.contentViewPageCells setClipsToBounds:YES];
+    //[self.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.contentViewPageCells setBackgroundColor:[UIColor clearColor]];
+    [self addSubview:self.contentViewPageCells];
     
     self.visibleNamePageCells = [NSMutableSet set];
     self.visibleNamePageCellsMapping = [NSMutableDictionary dictionary];
     self.visibleNamePageCellsConstraints = [NSMutableDictionary dictionary];
     self.recyclePoolNamePageCells = [NSMutableSet set];
+    
+    self.visiblePageCells = [NSMutableSet set];
+    self.visiblePageCellsMapping = [NSMutableDictionary dictionary];
+    self.visiblePageCellsConstraints = [NSMutableDictionary dictionary];
+    self.recyclePoolPageCells = [NSMutableSet set];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow{
@@ -148,22 +155,22 @@
             pageCell = [self.scrollViewDataSource PAScrollView:self pageCellAtIndexPath:path];
             pageCell.indexPath = path;
             
-            [self.contentView insertSubview:pageCell atIndex:self.visiblePageCells.count];
+            [self.contentViewPageCells insertSubview:pageCell atIndex:self.visiblePageCells.count];
             [self.visiblePageCells addObject:pageCell];
             [self.visiblePageCellsMapping setObject:pageCell forKey:path];
         }
         
         NSArray *pageCellConstraints = [self.visiblePageCellsConstraints objectForKey:path];
-        [self.contentView removeConstraints:pageCellConstraints];
+        [self.contentViewPageCells removeConstraints:pageCellConstraints];
         
-        NSDictionary *viewDict2 = @{@"pageCell":pageCell, @"contentView": self.contentView};
+        NSDictionary *viewDict2 = @{@"pageCell":pageCell, @"contentView": self.contentViewPageCells};
         NSDictionary *metrics = @{@"leftMargin":@(pageCellIndex*self.bounds.size.width), @"height":@(pageCellHeight), @"width": @(self.bounds.size.width)};
         
         NSMutableArray *pageCellContraintsSave = [NSMutableArray array];
         
         [pageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-leftMargin-[pageCell(width)]" options:0 metrics:metrics views:viewDict2]];
         [pageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[pageCell(height)]|" options:0 metrics:metrics views:viewDict2]];
-        [self.contentView addConstraints:pageCellContraintsSave];
+        [self.contentViewPageCells addConstraints:pageCellContraintsSave];
         
         [self.visiblePageCellsConstraints setObject:pageCellContraintsSave forKey:path];
         
@@ -219,10 +226,16 @@
     
     [self setItemsCount:[self.scrollViewDataSource numberOfPagesInPAScrollView:self]];
     
-    [self.contentView removeConstraints:self.contentView.constraints];
-    
+    [self.contentViewNamePageCells removeConstraints:self.contentViewNamePageCells.constraints];
+    [self.contentViewPageCells removeConstraints:self.contentViewPageCells.constraints];
+
     self.contentSize = CGSizeMake((self.bounds.size.width*self.itemsCount), self.bounds.size.height);
-    [self.contentView setFrame:(CGRect){
+    [self.contentViewNamePageCells setFrame:(CGRect){
+        .size = self.contentSize,
+        .origin = CGPointZero
+    }];
+    
+    [self.contentViewPageCells setFrame:(CGRect){
         .size = self.contentSize,
         .origin = CGPointZero
     }];
@@ -327,22 +340,22 @@
             namePageCell = [self.scrollViewDataSource PAScrollView:self namePageCellAtIndexPath:path];
             namePageCell.indexPath = path;
             
-            [self.contentView insertSubview:namePageCell atIndex:self.visibleNamePageCells.count];
+            [self.contentViewNamePageCells insertSubview:namePageCell atIndex:self.visibleNamePageCells.count];
             [self.visibleNamePageCells addObject:namePageCell];
             [self.visibleNamePageCellsMapping setObject:namePageCell forKey:path];
         }
         
         NSArray *namePageCellConstraints = [self.visibleNamePageCellsConstraints objectForKey:path];
-        [self.contentView removeConstraints:namePageCellConstraints];
+        [self.contentViewNamePageCells removeConstraints:namePageCellConstraints];
         
-        NSDictionary *viewDict2 = @{@"namePageCell":namePageCell, @"contentView": self.contentView};
+        NSDictionary *viewDict2 = @{@"namePageCell":namePageCell, @"contentView": self.contentViewNamePageCells};
         NSDictionary *metrics = @{@"leftMargin":@(namePageCellIndex*self.bounds.size.width), @"height":@(namePageCellHeight), @"width": @(self.bounds.size.width)};
         
         NSMutableArray *namePageCellContraintsSave = [NSMutableArray array];
         
         [namePageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-leftMargin-[namePageCell(width)]" options:0 metrics:metrics views:viewDict2]];
         [namePageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[namePageCell(height)]|" options:0 metrics:metrics views:viewDict2]];
-        [self.contentView addConstraints:namePageCellContraintsSave];
+        [self.contentViewNamePageCells addConstraints:namePageCellContraintsSave];
         
         [self.visibleNamePageCellsConstraints setObject:namePageCellContraintsSave forKey:path];
         
