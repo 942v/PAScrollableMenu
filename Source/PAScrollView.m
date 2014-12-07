@@ -320,6 +320,8 @@
             [self.recyclePoolNamePageCells addObject:namePageCell];
             [self.visibleNamePageCellsMapping removeObjectForKey:namePageCell.indexPath];
             [self.visibleNamePageCellsConstraints removeObjectForKey:namePageCell.indexPath];
+            
+            [namePageCell setIndexPath:nil];
             [namePageCell removeFromSuperview];
         }
     }
@@ -345,29 +347,29 @@
         PAScrollViewNamePageCell* namePageCell = [self.visibleNamePageCellsMapping objectForKey:path];
         if (!namePageCell){
             namePageCell = [self.scrollViewDataSource PAScrollView:self namePageCellAtIndexPath:path];
-            namePageCell.indexPath = path;
+            [namePageCell setIndexPath:path];
+            
+            if ([self.scrollViewDelegate respondsToSelector:@selector(PAScrollView:willDisplayNamePageCell:forIndexPath:)]){
+                [self.scrollViewDelegate PAScrollView:self willDisplayNamePageCell:namePageCell forIndexPath:path];
+            }
             
             [self.contentViewNamePageCells insertSubview:namePageCell atIndex:self.visibleNamePageCells.count];
             [self.visibleNamePageCells addObject:namePageCell];
             [self.visibleNamePageCellsMapping setObject:namePageCell forKey:path];
-        }
-        
-        NSArray *namePageCellConstraints = [self.visibleNamePageCellsConstraints objectForKey:path];
-        [self.contentViewNamePageCells removeConstraints:namePageCellConstraints];
-        
-        NSDictionary *viewDict2 = @{@"namePageCell":namePageCell, @"contentView": self.contentViewNamePageCells};
-        NSDictionary *metrics = @{@"leftMargin":@(namePageCellIndex*self.bounds.size.width), @"height":@(namePageCellHeight), @"width": @(self.bounds.size.width)};
-        
-        NSMutableArray *namePageCellContraintsSave = [NSMutableArray array];
-        
-        [namePageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-leftMargin-[namePageCell(width)]" options:0 metrics:metrics views:viewDict2]];
-        [namePageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[namePageCell(height)]|" options:0 metrics:metrics views:viewDict2]];
-        [self.contentViewNamePageCells addConstraints:namePageCellContraintsSave];
-        
-        [self.visibleNamePageCellsConstraints setObject:namePageCellContraintsSave forKey:path];
-        
-        if ([self.scrollViewDelegate respondsToSelector:@selector(PAScrollView:willDisplayNamePageCell:forIndexPath:)]){
-            [self.scrollViewDelegate PAScrollView:self willDisplayNamePageCell:namePageCell forIndexPath:path];
+            
+            NSArray *namePageCellConstraints = [self.visibleNamePageCellsConstraints objectForKey:path];
+            [self.contentViewNamePageCells removeConstraints:namePageCellConstraints];
+            
+            NSDictionary *viewDict2 = @{@"namePageCell":namePageCell, @"contentView": self.contentViewNamePageCells};
+            NSDictionary *metrics = @{@"leftMargin":@(namePageCellIndex*self.bounds.size.width), @"height":@(namePageCellHeight), @"width": @(self.bounds.size.width)};
+            
+            NSMutableArray *namePageCellContraintsSave = [NSMutableArray array];
+            
+            [namePageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-leftMargin-[namePageCell(width)]" options:0 metrics:metrics views:viewDict2]];
+            [namePageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[namePageCell(height)]|" options:0 metrics:metrics views:viewDict2]];
+            [self.contentViewNamePageCells addConstraints:namePageCellContraintsSave];
+            
+            [self.visibleNamePageCellsConstraints setObject:namePageCellContraintsSave forKey:path];
         }
     }
     
