@@ -29,7 +29,8 @@
 
 @optional
 - (void)PAScrollView:(PAScrollView*)aScrollView willDisplayPageCell:(PAScrollViewPageCell*)aPageCell forIndexPath:(NSIndexPath*)indexPath;
-- (void)PAScrollView:(PAScrollView*)aScrollView willDisplayNamePageCell:(PAScrollViewNamePageCell*)aPageCell forIndexPath:(NSIndexPath*)indexPath;
+- (void)PAScrollView:(PAScrollView*)aScrollView willRecyclePageCell:(PAScrollViewPageCell*)aPageCell forIndexPath:(NSIndexPath*)indexPath;
+- (void)PAScrollView:(PAScrollView*)aScrollView willDisplayNamePageCell:(PAScrollViewNamePageCell*)aNamePageCell forIndexPath:(NSIndexPath*)indexPath;
 
 @end
 

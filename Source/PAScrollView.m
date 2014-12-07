@@ -124,10 +124,17 @@
     
     // Remove cells that are no longer visible an cached them
     for(PAScrollViewPageCell* pageCell in self.visiblePageCells){
-        if (!CGRectIntersectsRect(pageCell.frame, self.bounds)){
+        if (!CGRectIntersectsRect(pageCell.frame, CGRectOffset(self.bounds, -self.bounds.size.width, 0)) &&
+            !CGRectIntersectsRect(pageCell.frame, self.bounds) &&
+            !CGRectIntersectsRect(pageCell.frame, CGRectOffset(self.bounds, self.bounds.size.width, 0))){
+            if ([self.scrollViewDelegate respondsToSelector:@selector(PAScrollView:willRecyclePageCell:forIndexPath:)]) {
+                [self.scrollViewDelegate PAScrollView:self willRecyclePageCell:pageCell forIndexPath:pageCell.indexPath];
+            }
+            
             [self.recyclePoolPageCells addObject:pageCell];
             [self.visiblePageCellsMapping removeObjectForKey:pageCell.indexPath];
             [self.visiblePageCellsConstraints removeObjectForKey:pageCell.indexPath];
+            [pageCell setIndexPath:nil];
             [pageCell removeFromSuperview];
         }
     }
@@ -155,27 +162,27 @@
             pageCell = [self.scrollViewDataSource PAScrollView:self pageCellAtIndexPath:path];
             pageCell.indexPath = path;
             
+            if ([self.scrollViewDelegate respondsToSelector:@selector(PAScrollView:willDisplayPageCell:forIndexPath:)]){
+                [self.scrollViewDelegate PAScrollView:self willDisplayPageCell:pageCell forIndexPath:path];
+            }
+            
             [self.contentViewPageCells insertSubview:pageCell atIndex:self.visiblePageCells.count];
             [self.visiblePageCells addObject:pageCell];
             [self.visiblePageCellsMapping setObject:pageCell forKey:path];
-        }
-        
-        NSArray *pageCellConstraints = [self.visiblePageCellsConstraints objectForKey:path];
-        [self.contentViewPageCells removeConstraints:pageCellConstraints];
-        
-        NSDictionary *viewDict2 = @{@"pageCell":pageCell, @"contentView": self.contentViewPageCells};
-        NSDictionary *metrics = @{@"leftMargin":@(pageCellIndex*self.bounds.size.width), @"height":@(pageCellHeight), @"width": @(self.bounds.size.width)};
-        
-        NSMutableArray *pageCellContraintsSave = [NSMutableArray array];
-        
-        [pageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-leftMargin-[pageCell(width)]" options:0 metrics:metrics views:viewDict2]];
-        [pageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[pageCell(height)]|" options:0 metrics:metrics views:viewDict2]];
-        [self.contentViewPageCells addConstraints:pageCellContraintsSave];
-        
-        [self.visiblePageCellsConstraints setObject:pageCellContraintsSave forKey:path];
-        
-        if ([self.scrollViewDelegate respondsToSelector:@selector(PAScrollView:willDisplayPageCell:forIndexPath:)]){
-            [self.scrollViewDelegate PAScrollView:self willDisplayPageCell:pageCell forIndexPath:path];
+            
+            NSArray *pageCellConstraints = [self.visiblePageCellsConstraints objectForKey:path];
+            [self.contentViewPageCells removeConstraints:pageCellConstraints];
+            
+            NSDictionary *viewDict2 = @{@"pageCell":pageCell, @"contentView": self.contentViewPageCells};
+            NSDictionary *metrics = @{@"leftMargin":@(pageCellIndex*self.bounds.size.width), @"height":@(pageCellHeight), @"width": @(self.bounds.size.width)};
+            
+            NSMutableArray *pageCellContraintsSave = [NSMutableArray array];
+            
+            [pageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-leftMargin-[pageCell(width)]" options:0 metrics:metrics views:viewDict2]];
+            [pageCellContraintsSave addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[pageCell(height)]|" options:0 metrics:metrics views:viewDict2]];
+            [self.contentViewPageCells addConstraints:pageCellContraintsSave];
+            
+            [self.visiblePageCellsConstraints setObject:pageCellContraintsSave forKey:path];
         }
     }
     
